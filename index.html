@@ -1,0 +1,792 @@
+<title>코드잇 스프린터 유형 테스트</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --bg: #0D0B14;
+    --surface: #13101E;
+    --surface2: #1C1830;
+    --border: #2E2950;
+    --fg: #EDE9FF;
+    --fg-sub: #9490B8;
+    --accent: #7C3AFF;
+    --accent-soft: rgba(124,58,255,.15);
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F5F3FF; --surface: #fff; --surface2: #EDE9FF;
+      --border: #D4CCFF; --fg: #1A1235; --fg-sub: #6B5FA8;
+      --accent: #5B21B6; --accent-soft: rgba(91,33,182,.09);
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F5F3FF; --surface: #fff; --surface2: #EDE9FF;
+    --border: #D4CCFF; --fg: #1A1235; --fg-sub: #6B5FA8;
+    --accent: #5B21B6; --accent-soft: rgba(91,33,182,.09);
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    padding-inline: 20px;
+    padding-block: 48px;
+  }
+
+  .wrap { width: 100%; max-width: 560px; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .7px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 4px 14px;
+    margin-bottom: 20px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    cursor: pointer;
+    transition: opacity .15s, transform .1s;
+    margin-top: 4px;
+  }
+  .btn-primary:hover { opacity: .88; }
+  .btn-primary:active { transform: scale(.99); }
+
+  /* ── INTRO ── */
+  .intro-top { text-align: center; margin-bottom: 32px; }
+
+  .intro-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    text-wrap: balance;
+  }
+
+  .intro-sub {
+    font-size: 14px;
+    color: var(--fg-sub);
+    line-height: 1.75;
+  }
+
+  .emoji-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 40px;
+    margin: 26px 0;
+  }
+
+  .float-e {
+    display: inline-block;
+    animation: floaty 2.8s ease-in-out infinite;
+  }
+  .float-e:nth-child(2) { animation-delay: .35s; }
+  .float-e:nth-child(3) { animation-delay: .7s; }
+  .float-e:nth-child(4) { animation-delay: 1.05s; }
+  .float-e:nth-child(5) { animation-delay: 1.4s; }
+  @keyframes floaty {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @media (prefers-reduced-motion: reduce) { .float-e { animation: none; } }
+
+  .field { margin-bottom: 18px; }
+
+  .field label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .6px;
+    color: var(--fg-sub);
+    margin-bottom: 8px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(124,58,255,.08);
+    border: 1.5px solid rgba(124,58,255,.3);
+    border-radius: 10px;
+    color: var(--fg);
+    font-size: 15px;
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    outline: none;
+    transition: border-color .2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field input:focus, .field select:focus { border-color: var(--accent); }
+
+  .select-wrap {
+    position: relative;
+  }
+  .select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--fg-sub);
+    pointer-events: none;
+    font-size: 13px;
+  }
+  .field select option {
+    background: var(--surface2);
+    color: var(--fg);
+  }
+
+  .err-msg {
+    font-size: 12px;
+    color: #F85149;
+    margin-top: -10px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .err-msg.show { display: block; }
+
+  /* ── QUIZ ── */
+  .prog-area { margin-bottom: 30px; }
+
+  .prog-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .prog-label, .prog-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-sub);
+    letter-spacing: .4px;
+  }
+
+  .prog-track {
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width .4s ease;
+  }
+
+  .q-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: .5px;
+    margin-bottom: 10px;
+  }
+
+  .q-text {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.55;
+    margin-bottom: 22px;
+    text-wrap: balance;
+  }
+
+  .opts { display: flex; flex-direction: column; gap: 9px; }
+
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 16px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    text-align: left;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    color: var(--fg);
+    line-height: 1.55;
+    width: 100%;
+  }
+  .opt:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .opt.sel  { border-color: var(--accent); background: var(--accent-soft); }
+  .opt:disabled { cursor: default; }
+
+  .opt-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .quiz-foot {
+    display: flex;
+    gap: 10px;
+    margin-top: 26px;
+  }
+
+  .btn-back {
+    padding: 12px 18px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--fg-sub);
+    font-size: 14px;
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity .15s;
+  }
+  .btn-back:hover { opacity: .7; }
+
+  /* ── RESULT ── */
+  .res-hero {
+    text-align: center;
+    padding: 36px 24px 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 14px;
+  }
+
+  .res-big-emoji {
+    font-size: 80px;
+    display: block;
+    margin-bottom: 16px;
+    animation: popIn .55s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes popIn {
+    from { transform: scale(.2); opacity: 0; }
+    to   { transform: scale(1);  opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .res-big-emoji { animation: none; } }
+
+  .res-who {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--fg-sub);
+    margin-bottom: 6px;
+  }
+
+  .res-type-name {
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .res-chip {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: .4px;
+  }
+
+  .res-body {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .sec-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--fg-sub);
+    letter-spacing: .9px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .res-desc {
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--fg);
+  }
+
+  .traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .trait {
+    font-size: 13px;
+    padding: 5px 13px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--fg-sub);
+  }
+
+  .compat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--fg-sub);
+  }
+
+  .compat-icon { font-size: 24px; flex-shrink: 0; }
+
+  .share-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 12px;
+  }
+
+  .share-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--fg-sub);
+    white-space: pre-line;
+    margin-bottom: 14px;
+  }
+
+  .btn-copy {
+    width: 100%;
+    padding: 11px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--fg);
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .btn-copy:hover { opacity: .72; }
+
+  .btn-retry {
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--fg-sub);
+    font-size: 14px;
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .btn-retry:hover { opacity: .65; }
+
+  /* ── SUBMIT STATUS ── */
+  .sub-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-align: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    display: none;
+    letter-spacing: .3px;
+  }
+  .sub-status.show { display: block; }
+  .sub-status.sending { color: var(--fg-sub); background: var(--surface2); border: 1px solid var(--border); }
+  .sub-status.ok   { color: #3FB950; background: rgba(63,185,80,.1); border: 1px solid rgba(63,185,80,.3); }
+  .sub-status.fail  { color: #F85149; background: rgba(248,81,73,.1); border: 1px solid rgba(248,81,73,.3); }
+</style>
+
+<div class="wrap">
+  <!-- INTRO -->
+  <div id="sc-intro" class="screen active">
+    <div class="intro-top">
+      <span class="badge mono">CODEIT SPRINT @ TYPE TEST</span>
+      <h1 class="intro-title">나는 어떤 스프린터일까? 🔍</h1>
+      <p class="intro-sub">10개의 질문으로 알아보는<br>나의 스프린터 유형</p>
+      <div class="emoji-row">
+        <span class="float-e">🦉</span>
+        <span class="float-e">📓</span>
+        <span class="float-e">🙋</span>
+        <span class="float-e">🏃</span>
+        <span class="float-e">🌊</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label for="inp-kisu">기수 // COHORT</label>
+        <input type="number" id="inp-kisu" placeholder="예) 17" min="1" max="99">
+      </div>
+      <div class="field">
+        <label for="inp-name">이름 // NAME</label>
+        <input type="text" id="inp-name" placeholder="이름을 입력해주세요">
+      </div>
+      <div class="field">
+        <label for="inp-course">과정 // TRACK</label>
+        <div class="select-wrap">
+          <select id="inp-course">
+            <option value="">과정을 선택해주세요</option>
+            <option value="FS">풀스택 엔지니어 (FS)</option>
+            <option value="FESI">프론트엔드 단기심화 (FESI)</option>
+            <option value="DA">데이터 분석가 (DA)</option>
+            <option value="PD">프로덕트 디자인 (PD)</option>
+            <option value="IF">IT 서비스 창업 (IF)</option>
+            <option value="AI">AI 엔지니어 (AI)</option>
+            <option value="SB">Spring 백엔드 (SB)</option>
+          </select>
+        </div>
+      </div>
+      <p class="err-msg" id="err-msg">기수, 이름, 과정을 모두 입력해주세요!</p>
+      <button class="btn-primary" onclick="startQuiz()">테스트 시작하기 →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="sc-quiz" class="screen">
+    <div class="prog-area">
+      <div class="prog-meta">
+        <span class="prog-label">// PROGRESS</span>
+        <span class="prog-count" id="prog-count">1 / 10</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <p class="q-eyebrow" id="q-eyebrow">Q.01</p>
+    <p class="q-text" id="q-text"></p>
+    <div class="opts" id="opts"></div>
+
+    <div class="quiz-foot">
+      <button class="btn-back" id="btn-back" onclick="prevQ()">← 이전</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="sc-result" class="screen">
+    <div class="res-hero">
+      <span class="res-big-emoji" id="res-emoji"></span>
+      <p class="res-who" id="res-who"></p>
+      <h2 class="res-type-name" id="res-type-name"></h2>
+      <span class="res-chip" id="res-chip"></span>
+    </div>
+
+    <div class="res-body">
+      <div>
+        <p class="sec-label">// DESCRIPTION</p>
+        <p class="res-desc" id="res-desc"></p>
+      </div>
+      <div>
+        <p class="sec-label">// TRAITS</p>
+        <div class="traits" id="res-traits"></div>
+      </div>
+      <div>
+        <p class="sec-label">// 잘 맞는 유형</p>
+        <div class="compat-row">
+          <span class="compat-icon" id="res-compat-icon"></span>
+          <span id="res-compat-text"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="sub-status" class="sub-status"></div>
+
+    <div class="share-box">
+      <p class="sec-label">// SHARE</p>
+      <div class="share-text" id="share-text"></div>
+      <button class="btn-copy" id="btn-copy" onclick="copyResult()">📋 결과 복사하기</button>
+    </div>
+
+    <button class="btn-retry" onclick="resetQuiz()">↩ 다시 테스트하기</button>
+  </div>
+</div>
+
+<script>
+const TOTAL = 10;
+
+const QS = [
+  { q: "수업 주로 어디서 들어?", opts: [
+    { k:"A", t:"집 책상에서. 내 공간에서 제일 집중 잘 됨", tp:0 },
+    { k:"B", t:"스터디카페 단골석. 조용한 환경이 필수", tp:1 },
+    { k:"C", t:"텐엑스강남에서 동기들이랑 같이", tp:2 },
+    { k:"D", t:"카페. 적당한 소음이 오히려 더 잘 됨", tp:3 },
+    { k:"E", t:"그날 컨디션 따라 달라. 딱히 정해진 곳 없음", tp:4 },
+  ]},
+  { q: "내 Zep 캐릭터 꾸미기 스타일은?", opts: [
+    { k:"A", t:"처음 설정 그대로. 아직 바꿀 타이밍을 못 잡았음", tp:0 },
+    { k:"B", t:"깔끔하고 단정하게. 불필요한 건 안 붙임", tp:1 },
+    { k:"C", t:"동기들이랑 테마 맞춰서 비슷하게 꾸밈", tp:2 },
+    { k:"D", t:"빠르게 마음에 드는 거 하나 골라서 완료", tp:3 },
+    { k:"E", t:"눈에 잘 띄게 개성 있게. 존재감 있어야 함", tp:4 },
+  ]},
+  { q: "강의 들을 때 나는?", opts: [
+    { k:"A", t:"일단 쭉 듣고, 이해 안 된 부분은 나중에 자료 찾아봄", tp:0 },
+    { k:"B", t:"일시정지 해가며 필기 꼼꼼히. 중요한 건 색깔로 표시", tp:1 },
+    { k:"C", t:"궁금한 거 생기면 바로 주강사님께 질문", tp:2 },
+    { k:"D", t:"핵심 개념 빠르게 파악하고 실습 위주로 집중", tp:3 },
+    { k:"E", t:"동기들이랑 같이 들으면서 중간중간 반응 나눔", tp:4 },
+  ]},
+  { q: "과제는 언제 시작해?", opts: [
+    { k:"A", t:"마감 전날. 그때 집중력이 제일 잘 나옴", tp:0 },
+    { k:"B", t:"강의 끝나자마자 바로. 미루면 찝찝해서 못 있음", tp:1 },
+    { k:"C", t:"디스코드에서 동기들이 시작한다고 하면 같이 잡음", tp:2 },
+    { k:"D", t:"혼자 집중할 시간 확보되면 바로 시작", tp:3 },
+    { k:"E", t:'과제 얘기 나오면 먼저 "같이 할 사람?" 분위기 띄움', tp:4 },
+  ]},
+  { q: "모르는 개념 나왔을 때 나는?", opts: [
+    { k:"A", t:"일단 흐름 파악하면서 쭉 가고, 나중에 찾아봄", tp:0 },
+    { k:"B", t:"공식 문서, 강의 다시 보기, 구글까지 다 뒤짐", tp:1 },
+    { k:"C", t:"디스코드에 질문 올림. 나만 모르는 게 아닐 수도 있으니까", tp:2 },
+    { k:"D", t:"검색으로 스스로 해결책 먼저 찾아봄", tp:3 },
+    { k:"E", t:'동기한테 먼저 "이거 알아?" 물어봄', tp:4 },
+  ]},
+  { q: "디스코드에서 나는?", opts: [
+    { k:"A", t:"알림 나중에 한꺼번에 확인. 답장이 좀 느린 편", tp:0 },
+    { k:"B", t:"중요한 공지는 바로 확인하고 저장해둠", tp:1 },
+    { k:"C", t:"질문도 많이 하고, 남 질문에 아는 거 있으면 답변도 달음", tp:2 },
+    { k:"D", t:"필요한 정보 있을 때 검색해서 들어옴", tp:3 },
+    { k:"E", t:"스터디 모집이나 모임 글 자주 올리는 편", tp:4 },
+  ]},
+  { q: "팀 프로젝트에서 내 자연스러운 역할은?", opts: [
+    { k:"A", t:"맡은 파트 데드라인 내에 확실히 완성하는 실행가", tp:0 },
+    { k:"B", t:"자료 조사, 내용 정리, 문서화 담당", tp:1 },
+    { k:"C", t:"막힌 팀원 도와주고, 모르면 같이 찾아봄", tp:2 },
+    { k:"D", t:"내 파트 먼저 빠르게 완성하고 전체 진행 상황 파악", tp:3 },
+    { k:"E", t:"역할 분배, 일정 조율, 팀 분위기 관리", tp:4 },
+  ]},
+  { q: "과제 완성 기준은?", opts: [
+    { k:"A", t:"기능 되면 일단 제출. 다듬는 건 다음에", tp:0 },
+    { k:"B", t:"요구사항 100% + 마무리 정리까지 해야 제출 가능", tp:1 },
+    { k:"C", t:"동기들이랑 비교해보고 비슷한 수준이면 제출", tp:2 },
+    { k:"D", t:"스스로 납득되면 제출. 내 기준에 맞으면 됨", tp:3 },
+    { k:"E", t:'동기가 "이 정도면 됐어" 해주면 제출', tp:4 },
+  ]},
+  { q: "번아웃 올 것 같을 때 나는?", opts: [
+    { k:"A", t:"억지로라도 자리에 앉음. 하다 보면 어떻게든 됨", tp:0 },
+    { k:"B", t:"해야 할 것들 체크리스트 정리하면서 마음 다잡음", tp:1 },
+    { k:"C", t:'디스코드에 "오늘 너무 힘들다" 털어놓음. 공감받으면 회복됨', tp:2 },
+    { k:"D", t:"잠깐 환기하고 나서 자연스럽게 복귀", tp:3 },
+    { k:"E", t:'동기한테 연락해서 "텐엑스강남 가서 같이 하자" 함', tp:4 },
+  ]},
+  { q: "스프린트 수료 후 내 목표는?", opts: [
+    { k:"A", t:"빨리 취업해서 실전에서 배우고 싶음", tp:0 },
+    { k:"B", t:"포트폴리오 완성도 끝장내고 나서 지원할 것", tp:1 },
+    { k:"C", t:"동기들이랑 스터디나 사이드 프로젝트 같이 하고 싶음", tp:2 },
+    { k:"D", t:"부족한 부분 더 보완하고 준비 확실히 한 뒤에 지원", tp:3 },
+    { k:"E", t:"동기들이랑 창업이나 협업 프로젝트 도전해보고 싶음", tp:4 },
+  ]},
+];
+
+const TYPES = [
+  {
+    emoji: "🦉", name: "새벽감성 올빼미", chip: "NIGHT-OWL",
+    color: "#9B59B6", colorBg: "rgba(155,89,182,.13)",
+    desc: "낮엔 여유롭고 밤이 되면 집중력이 폭발하는 타입이에요. 마감 전날 밤 10시부터 갑자기 천재가 됩니다. 루즈해 보여도 결과물은 꼭 나오고, 어떻게든 해내는 저력이 있어요. 스프린트의 진짜 마감 수호자 🦉",
+    traits: ["저력", "마감 수호자", "밤형 집중력", "의외의 성실함"],
+    compatIcon: "📓", compatText: "꼼꼼 두더지 — 올빼미가 밤새 만들어낸 결과물을 두더지가 꼼꼼하게 보완해줘요"
+  },
+  {
+    emoji: "📓", name: "꼼꼼 두더지", chip: "METICULOUS",
+    color: "#E8A838", colorBg: "rgba(232,168,56,.13)",
+    desc: "필기 없인 강의 못 듣는 타입이에요. 강의 자료, 노션, 직접 쓴 노트까지 3중으로 정리합니다. 요구사항 100% 아니면 제출 버튼을 못 누르고, 마감 전날에도 마무리 검토 중. 팀에 한 명은 꼭 필요한 꼼꼼함의 아이콘 📓",
+    traits: ["꼼꼼함", "완성도", "기록의 달인", "신뢰감"],
+    compatIcon: "🙋", compatText: "질문왕 미어캣 — 두더지가 혼자 쌓아둔 걸 미어캣이 팀 전체에 빠르게 연결해줘요"
+  },
+  {
+    emoji: "🙋", name: "질문왕 미어캣", chip: "COMMUNITY",
+    color: "#4ECDC4", colorBg: "rgba(78,205,196,.13)",
+    desc: "모르는 게 생기면 5분 안에 디스코드에 올리는 타입이에요. '저도 궁금했어요!' 리액션을 가장 많이 받는 사람. 질문 잘 하는 게 실력이고, 공유 잘 하는 게 팀워크라는 걸 아는 스프린트의 커뮤니티 빌더 🙋",
+    traits: ["적극성", "커뮤니티 빌더", "공유 정신", "빠른 성장"],
+    compatIcon: "🌊", compatText: "팀 무드메이커 돌고래 — 미어캣의 적극적인 에너지를 돌고래가 팀 전체로 확장시켜줘요"
+  },
+  {
+    emoji: "🏃", name: "혼자 달리는 치타", chip: "SELF-DRIVEN",
+    color: "#E06C75", colorBg: "rgba(224,108,117,.13)",
+    desc: "검색창이 곧 공부 도구. 막히면 직접 찾아보고, 스스로 해결했을 때 제일 뿌듯한 타입이에요. 집중 시작하면 속도가 빠르고, 자기 페이스가 확실합니다. 자기 주도 학습의 정석 🏃",
+    traits: ["자기 주도", "빠른 실행", "높은 집중력", "탁월한 해결력"],
+    compatIcon: "📓", compatText: "꼼꼼 두더지 — 치타가 빠르게 완성한 걸 두더지가 꼼꼼하게 점검해줘요"
+  },
+  {
+    emoji: "🌊", name: "팀 무드메이커 돌고래", chip: "TEAM-PLAYER",
+    color: "#61AFEF", colorBg: "rgba(97,175,239,.13)",
+    desc: "같이 하면 더 잘 되는 타입이에요. 팀 분위기 처지면 제일 먼저 알아채고, 제일 먼저 띄우는 사람. 역할 분배, 일정 조율, 응원까지 다 합니다. 스프린트 끝나고도 동기들이랑 뭔가 하고 싶어하는, 팀워크의 핵심 🌊",
+    traits: ["협업 중심", "분위기 메이커", "연결고리", "팀플레이어"],
+    compatIcon: "🦉", compatText: "새벽감성 올빼미 — 돌고래가 분위기 살려주면 올빼미도 낮부터 시동 걸 수 있어요"
+  },
+];
+
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxaWwhgbNizman0oosSfRQvTw32VK6wytkqY01bmPf1Zz08rsfY4y-UI7tS418-uorHQQ/exec';
+
+let curQ = 0, answers = new Array(TOTAL).fill(null);
+let userName = "", userKisu = "", userCourse = "";
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  const kisu   = document.getElementById('inp-kisu').value.trim();
+  const name   = document.getElementById('inp-name').value.trim();
+  const course = document.getElementById('inp-course').value;
+  const err    = document.getElementById('err-msg');
+  if (!kisu || !name || !course) { err.classList.add('show'); return; }
+  err.classList.remove('show');
+  userKisu = kisu; userName = name; userCourse = course;
+  curQ = 0; answers = new Array(TOTAL).fill(null);
+  show('sc-quiz');
+  renderQ();
+}
+
+function renderQ() {
+  const q = QS[curQ];
+  document.getElementById('prog-count').textContent = `${curQ+1} / ${TOTAL}`;
+  document.getElementById('prog-fill').style.width = `${(curQ / TOTAL) * 100}%`;
+  document.getElementById('q-eyebrow').textContent = `Q.${String(curQ+1).padStart(2,'0')}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const list = document.getElementById('opts');
+  list.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (answers[curQ] === i ? ' sel' : '');
+    btn.innerHTML = `<span class="opt-key">${o.k}</span><span>${o.t}</span>`;
+    btn.onclick = () => pick(i);
+    list.appendChild(btn);
+  });
+
+  document.getElementById('btn-back').style.visibility = curQ === 0 ? 'hidden' : 'visible';
+}
+
+function pick(i) {
+  answers[curQ] = i;
+  document.querySelectorAll('.opt').forEach((b, idx) => b.classList.toggle('sel', idx === i));
+  // 선택 표시 잠깐 보여주고 자동 이동
+  setTimeout(() => {
+    if (curQ < TOTAL - 1) { curQ++; renderQ(); }
+    else showResult();
+  }, 320);
+}
+
+function prevQ() {
+  if (curQ > 0) { curQ--; renderQ(); }
+}
+
+function showResult() {
+  const scores = [0,0,0,0,0];
+  answers.forEach((a, qi) => { if (a !== null) scores[QS[qi].opts[a].tp]++; });
+  let best = 0;
+  scores.forEach((s,i) => { if (s > scores[best]) best = i; });
+  const t = TYPES[best];
+
+  document.getElementById('res-emoji').textContent = t.emoji;
+  document.getElementById('res-who').textContent = `${userKisu}기 · ${userName} · ${userCourse}`;
+  document.getElementById('res-type-name').textContent = t.name;
+
+  const chip = document.getElementById('res-chip');
+  chip.textContent = t.chip;
+  chip.style.cssText = `background:${t.colorBg};color:${t.color};border:1px solid ${t.color}`;
+
+  document.getElementById('res-desc').textContent = t.desc;
+  document.getElementById('res-traits').innerHTML = t.traits.map(tr => `<span class="trait">${tr}</span>`).join('');
+  document.getElementById('res-compat-icon').textContent = t.compatIcon;
+  document.getElementById('res-compat-text').textContent = t.compatText;
+
+  document.getElementById('share-text').textContent =
+    `// 코드잇 스프린터 유형 테스트 결과\n나는 ${t.emoji} ${t.name}!\n${userKisu}기 ${userName} (${userCourse})\n\n"${t.traits.join(' · ')}"\n\n잘 맞는 유형: ${t.compatIcon} ${t.compatText}\n\n#코드잇스프린트 #스프린터유형테스트`;
+
+  show('sc-result');
+  submitResult(t);
+}
+
+function submitResult(t) {
+  const el = document.getElementById('sub-status');
+  el.className = 'sub-status show sending';
+  el.textContent = '⏳ 결과 저장 중...';
+
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      kisu: userKisu,
+      name: userName,
+      course: userCourse,
+      typeEmoji: t.emoji,
+      typeName: t.name
+    })
+  })
+  .then(() => {
+    el.className = 'sub-status show ok';
+    el.textContent = '✅ 결과가 시트에 저장됐어요!';
+  })
+  .catch(() => {
+    el.className = 'sub-status show fail';
+    el.textContent = '⚠️ 저장 실패 (결과는 확인 가능해요)';
+  });
+}
+
+function copyResult() {
+  const text = document.getElementById('share-text').textContent;
+  const btn = document.getElementById('btn-copy');
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ 복사 완료!';
+    setTimeout(() => { btn.textContent = '📋 결과 복사하기'; }, 2000);
+  }).catch(() => {
+    btn.textContent = '위 텍스트를 직접 복사해주세요';
+    setTimeout(() => { btn.textContent = '📋 결과 복사하기'; }, 2500);
+  });
+}
+
+function resetQuiz() {
+  document.getElementById('inp-kisu').value = '';
+  document.getElementById('inp-name').value = '';
+  document.getElementById('inp-course').value = '';
+  show('sc-intro');
+}
+</script>
