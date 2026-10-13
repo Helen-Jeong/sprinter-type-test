@@ -2,28 +2,28 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
   :root {
-    --bg: #0D0B14;
-    --surface: #13101E;
-    --surface2: #1C1830;
-    --border: #2E2950;
+    --bg: #0F0F13;
+    --surface: #18181F;
+    --surface2: #222228;
+    --border: #363642;
     --fg: #EDE9FF;
     --fg-sub: #9490B8;
-    --accent: #7C3AFF;
-    --accent-soft: rgba(124,58,255,.15);
+    --accent: #7B72CC;
+    --accent-soft: rgba(123,114,204,.15);
     color-scheme: dark;
   }
   @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]) {
-      --bg: #F5F3FF; --surface: #fff; --surface2: #EDE9FF;
-      --border: #D4CCFF; --fg: #1A1235; --fg-sub: #6B5FA8;
-      --accent: #5B21B6; --accent-soft: rgba(91,33,182,.09);
+      --bg: #F6F6FA; --surface: #fff; --surface2: #EDEDF5;
+      --border: #DCDCE8; --fg: #1A1235; --fg-sub: #6D6A9A;
+      --accent: #5855A8; --accent-soft: rgba(88,85,168,.09);
       color-scheme: light;
     }
   }
   :root[data-theme="light"] {
-    --bg: #F5F3FF; --surface: #fff; --surface2: #EDE9FF;
-    --border: #D4CCFF; --fg: #1A1235; --fg-sub: #6B5FA8;
-    --accent: #5B21B6; --accent-soft: rgba(91,33,182,.09);
+    --bg: #F6F6FA; --surface: #fff; --surface2: #EDEDF5;
+    --border: #DCDCE8; --fg: #1A1235; --fg-sub: #6D6A9A;
+    --accent: #5855A8; --accent-soft: rgba(88,85,168,.09);
     color-scheme: light;
   }
 
@@ -137,8 +137,8 @@
   .field input, .field select {
     width: 100%;
     padding: 12px 16px;
-    background: rgba(124,58,255,.08);
-    border: 1.5px solid rgba(124,58,255,.3);
+    background: rgba(123,114,204,.08);
+    border: 1.5px solid rgba(123,114,204,.3);
     border-radius: 10px;
     color: var(--fg);
     font-size: 15px;
@@ -298,7 +298,48 @@
     from { transform: scale(.2); opacity: 0; }
     to   { transform: scale(1);  opacity: 1; }
   }
-  @media (prefers-reduced-motion: reduce) { .res-big-emoji { animation: none; } }
+  /* 동물별 루프 애니메이션 */
+  .anim-owl    { animation: popIn .55s cubic-bezier(.34,1.56,.64,1) both, owlBlink 3.2s 1s ease-in-out infinite; }
+  .anim-hamster{ animation: popIn .55s cubic-bezier(.34,1.56,.64,1) both, hamsterWiggle 2.4s 1s ease-in-out infinite; }
+  .anim-otter  { animation: popIn .55s cubic-bezier(.34,1.56,.64,1) both, otterBob 2s 1s ease-in-out infinite; }
+  .anim-cheetah{ animation: popIn .55s cubic-bezier(.34,1.56,.64,1) both, cheetahDash 3s 1s ease-in-out infinite; }
+  .anim-dolphin{ animation: popIn .55s cubic-bezier(.34,1.56,.64,1) both, dolphinWave 2.6s 1s ease-in-out infinite; }
+
+  /* 올빼미: 살짝 좌우로 고개 돌리는 느낌 */
+  @keyframes owlBlink {
+    0%,100% { transform: rotate(0deg); }
+    20%     { transform: rotate(-6deg); }
+    40%     { transform: rotate(6deg); }
+    60%     { transform: rotate(-4deg); }
+    80%     { transform: rotate(0deg); }
+  }
+  /* 햄스터: 통통 제자리 달리기 느낌으로 위아래 */
+  @keyframes hamsterWiggle {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    25%     { transform: translateY(-5px) rotate(-3deg); }
+    75%     { transform: translateY(-3px) rotate(3deg); }
+  }
+  /* 수달: 물 위에서 살랑살랑 */
+  @keyframes otterBob {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    30%     { transform: translateY(-7px) rotate(4deg); }
+    70%     { transform: translateY(-4px) rotate(-3deg); }
+  }
+  /* 치타: 좌로 살짝 튀어나갔다 복귀 */
+  @keyframes cheetahDash {
+    0%,100% { transform: translateX(0) scaleX(1); }
+    15%     { transform: translateX(-8px) scaleX(1.05); }
+    30%     { transform: translateX(0) scaleX(1); }
+  }
+  /* 돌고래: 위아래 파도타기 */
+  @keyframes dolphinWave {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    35%     { transform: translateY(-9px) rotate(-5deg); }
+    65%     { transform: translateY(-5px) rotate(3deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .res-big-emoji, .anim-owl, .anim-hamster, .anim-otter, .anim-cheetah, .anim-dolphin { animation: none; }
+  }
 
   .res-who {
     font-family: 'JetBrains Mono', monospace;
@@ -420,6 +461,7 @@
     font-family: 'Noto Sans KR', system-ui, sans-serif;
     cursor: pointer;
     transition: opacity .15s;
+    margin-bottom: 48px;
   }
   .btn-retry:hover { opacity: .65; }
 
@@ -449,10 +491,10 @@
       <p class="intro-sub">10개의 질문으로 알아보는<br>나의 스프린터 유형</p>
       <div class="emoji-row">
         <span class="float-e">🦉</span>
-        <span class="float-e">📓</span>
-        <span class="float-e">🙋</span>
-        <span class="float-e">🏃</span>
-        <span class="float-e">🌊</span>
+        <span class="float-e">🐹</span>
+        <span class="float-e">🦦</span>
+        <span class="float-e">🐆</span>
+        <span class="float-e">🐬</span>
       </div>
     </div>
 
@@ -625,41 +667,51 @@ const TYPES = [
   {
     emoji: "🦉", name: "새벽감성 올빼미", chip: "NIGHT-OWL",
     color: "#9B59B6", colorBg: "rgba(155,89,182,.13)",
-    desc: "낮엔 여유롭고 밤이 되면 집중력이 폭발하는 타입이에요. 마감 전날 밤 10시부터 갑자기 천재가 됩니다. 루즈해 보여도 결과물은 꼭 나오고, 어떻게든 해내는 저력이 있어요. 스프린트의 진짜 마감 수호자 🦉",
+    shortDesc: "마감 직전에 폭발하는 저력을 가진",
+    desc: "낮엔 여유롭다가 밤이 되면 집중력이 폭발하는 타입이에요. 마감 전날 밤 10시부터 갑자기 천재가 됩니다. 루즈해 보여도 결과물은 반드시 나오고, 어떻게든 해내는 저력이 있어요. '아직 시간 있어'를 입에 달고 살다가도 결국 마감을 지켜내는, 스프린트의 진짜 마감 수호자 🦉",
     traits: ["저력", "마감 수호자", "밤형 집중력", "의외의 성실함"],
-    compatIcon: "📓", compatText: "꼼꼼 두더지 — 올빼미가 밤새 만들어낸 결과물을 두더지가 꼼꼼하게 보완해줘요"
+    compatIcon: "🐆", compatText: "혼자 달리는 치타 — 올빼미가 밤새 만들어낸 결과물을 치타가 빠르게 점검하고 완성시켜줘요"
   },
   {
-    emoji: "📓", name: "꼼꼼 두더지", chip: "METICULOUS",
+    emoji: "🐹", name: "꼼꼼 햄스터", chip: "METICULOUS",
     color: "#E8A838", colorBg: "rgba(232,168,56,.13)",
-    desc: "필기 없인 강의 못 듣는 타입이에요. 강의 자료, 노션, 직접 쓴 노트까지 3중으로 정리합니다. 요구사항 100% 아니면 제출 버튼을 못 누르고, 마감 전날에도 마무리 검토 중. 팀에 한 명은 꼭 필요한 꼼꼼함의 아이콘 📓",
+    shortDesc: "완성도와 꼼꼼함으로 팀을 지탱하는",
+    desc: "필기 없인 강의 못 듣는 타입이에요. 강의 자료, 노션, 직접 쓴 노트까지 3중으로 정리하고, 요구사항 100% 아니면 제출 버튼을 못 누릅니다. 마감 전날에도 마무리 검토 중이고, 나중에 팀원이 '어디서 봤더라?' 할 때 가장 먼저 꺼내줄 수 있는 사람이에요. 팀에 한 명은 꼭 필요한 꼼꼼함의 아이콘 🐹",
     traits: ["꼼꼼함", "완성도", "기록의 달인", "신뢰감"],
-    compatIcon: "🙋", compatText: "질문왕 미어캣 — 두더지가 혼자 쌓아둔 걸 미어캣이 팀 전체에 빠르게 연결해줘요"
+    compatIcon: "🦦", compatText: "질문왕 수달 — 햄스터가 혼자 쌓아둔 지식을 수달이 팀 전체에 빠르게 퍼뜨려줘요"
   },
   {
-    emoji: "🙋", name: "질문왕 미어캣", chip: "COMMUNITY",
+    emoji: "🦦", name: "질문왕 수달", chip: "COMMUNITY",
     color: "#4ECDC4", colorBg: "rgba(78,205,196,.13)",
-    desc: "모르는 게 생기면 5분 안에 디스코드에 올리는 타입이에요. '저도 궁금했어요!' 리액션을 가장 많이 받는 사람. 질문 잘 하는 게 실력이고, 공유 잘 하는 게 팀워크라는 걸 아는 스프린트의 커뮤니티 빌더 🙋",
+    shortDesc: "질문과 공유로 팀 전체를 성장시키는",
+    desc: "모르는 게 생기면 5분 안에 디스코드에 올리는 타입이에요. '저도 궁금했어요!' 리액션을 가장 많이 받는 사람이고, 나 하나의 질문이 팀 전체의 학습으로 이어진다는 걸 몸으로 실천해요. 질문 잘 하는 게 실력이고, 공유 잘 하는 게 팀워크라는 걸 아는 스프린트의 커뮤니티 빌더 🦦",
     traits: ["적극성", "커뮤니티 빌더", "공유 정신", "빠른 성장"],
-    compatIcon: "🐬", compatText: "팀 무드메이커 돌고래 — 미어캣의 적극적인 에너지를 돌고래가 팀 전체로 확장시켜줘요"
+    compatIcon: "🦉", compatText: "새벽감성 올빼미 — 수달의 활발한 질문이 올빼미에게도 자극이 되어 낮부터 시동 걸게 해줘요"
   },
   {
     emoji: "🐆", name: "혼자 달리는 치타", chip: "SELF-DRIVEN",
     color: "#E06C75", colorBg: "rgba(224,108,117,.13)",
-    desc: "검색창이 곧 공부 도구. 막히면 직접 찾아보고, 스스로 해결했을 때 제일 뿌듯한 타입이에요. 집중 시작하면 속도가 빠르고, 자기 페이스가 확실합니다. 자기 주도 학습의 정석 🏃",
+    shortDesc: "혼자서도 빠르게 문제를 해결하는",
+    desc: "검색창이 곧 공부 도구예요. 막히면 직접 찾아보고, 스스로 해결했을 때 제일 뿌듯한 타입이에요. 집중 시작하면 속도가 빠르고 자기 페이스가 확실합니다. 남의 도움을 받기 전에 최대한 스스로 해보는 것이 기본이고, 그렇게 쌓인 경험이 진짜 실력이 됩니다. 자기 주도 학습의 정석 🐆",
     traits: ["자기 주도", "빠른 실행", "높은 집중력", "탁월한 해결력"],
-    compatIcon: "📓", compatText: "꼼꼼 두더지 — 치타가 빠르게 완성한 걸 두더지가 꼼꼼하게 점검해줘요"
+    compatIcon: "🐬", compatText: "팀 무드메이커 돌고래 — 치타가 혼자 달릴 때 돌고래가 팀과 자연스럽게 연결해줘요"
   },
   {
     emoji: "🐬", name: "팀 무드메이커 돌고래", chip: "TEAM-PLAYER",
     color: "#61AFEF", colorBg: "rgba(97,175,239,.13)",
-    desc: "같이 하면 더 잘 되는 타입이에요. 팀 분위기 처지면 제일 먼저 알아채고, 제일 먼저 띄우는 사람. 역할 분배, 일정 조율, 응원까지 다 합니다. 스프린트 끝나고도 동기들이랑 뭔가 하고 싶어하는, 팀워크의 핵심 🌊",
+    shortDesc: "분위기를 살리고 팀을 하나로 묶는",
+    desc: "같이 하면 더 잘 되는 타입이에요. 팀 분위기가 처지면 제일 먼저 알아채고, 제일 먼저 띄우는 사람이에요. 역할 분배, 일정 조율, 응원까지 다 하면서도 자연스럽습니다. 스프린트가 끝나고도 동기들이랑 뭔가 같이 하고 싶어하는, 함께여서 더 강해지는 팀워크의 핵심 🐬",
     traits: ["협업 중심", "분위기 메이커", "연결고리", "팀플레이어"],
-    compatIcon: "🦉", compatText: "새벽감성 올빼미 — 돌고래가 분위기 살려주면 올빼미도 낮부터 시동 걸 수 있어요"
+    compatIcon: "🐹", compatText: "꼼꼼 햄스터 — 돌고래가 팀 분위기를 띄우면 햄스터가 꼼꼼하게 내용을 채워줘요"
   },
 ];
 
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxaWwhgbNizman0oosSfRQvTw32VK6wytkqY01bmPf1Zz08rsfY4y-UI7tS418-uorHQQ/exec';
+
+const COURSE_NAMES = {
+  FS: '풀스택 엔지니어', FESI: '프론트엔드 단기심화', DA: '데이터 분석가',
+  PD: '프로덕트 디자인', IF: 'IT 서비스 창업', AI: 'AI 엔지니어', SB: 'Spring 백엔드'
+};
 
 let curQ = 0, answers = new Array(TOTAL).fill(null);
 let userName = "", userKisu = "", userCourse = "";
@@ -724,8 +776,12 @@ function showResult() {
   scores.forEach((s,i) => { if (s > scores[best]) best = i; });
   const t = TYPES[best];
 
-  document.getElementById('res-emoji').textContent = t.emoji;
-  document.getElementById('res-who').textContent = `${userKisu}기 · ${userName} · ${userCourse}`;
+  const courseFull = COURSE_NAMES[userCourse] || userCourse;
+  const ANIM_CLASS = ['anim-owl','anim-hamster','anim-otter','anim-cheetah','anim-dolphin'];
+  const emojiEl = document.getElementById('res-emoji');
+  emojiEl.textContent = t.emoji;
+  emojiEl.className = 'res-big-emoji ' + (ANIM_CLASS[best] || '');
+  document.getElementById('res-who').textContent = `${courseFull} ${userKisu}기 · ${userName}`;
   document.getElementById('res-type-name').textContent = t.name;
 
   const chip = document.getElementById('res-chip');
@@ -738,7 +794,7 @@ function showResult() {
   document.getElementById('res-compat-text').textContent = t.compatText;
 
   document.getElementById('share-text').textContent =
-    `// 코드잇 스프린터 유형 테스트 결과\n나는 ${t.emoji} ${t.name}!\n${userKisu}기 ${userName} (${userCourse})\n\n"${t.traits.join(' · ')}"\n\n잘 맞는 유형: ${t.compatIcon} ${t.compatText}\n\n#코드잇스프린트 #스프린터유형테스트`;
+    `// 코드잇 스프린터 유형 테스트 결과\n${courseFull} ${userKisu}기 ${userName}\n\n나는 ${t.emoji} ${t.name}! ${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} ${t.compatText}\n\n#코드잇스프린트 #스프린터유형테스트`;
 
   show('sc-result');
   submitResult(t);
