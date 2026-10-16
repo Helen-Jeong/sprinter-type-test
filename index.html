@@ -164,7 +164,7 @@
     width: 100%; padding: 11px; background: transparent;
     border: 1px solid var(--border); border-radius: 10px; color: var(--fg-sub);
     font-size: 13px; font-family: 'IBM Plex Sans KR', system-ui, sans-serif;
-    cursor: pointer; transition: opacity .15s, border-color .15s; margin-top: 8px; font-weight: 700; margin-bottom: 12px;
+    cursor: pointer; transition: opacity .15s, border-color .15s; margin-top: 12px; font-weight: 700; margin-bottom: 0;
   }
   .btn-stats:hover { opacity: .75; border-color: var(--accent); }
 
@@ -318,12 +318,21 @@
   }
   .btn-copy:hover { opacity: .72; }
   .btn-retry {
-    width: 100%; padding: 13px; background: transparent; border: 1px solid var(--border);
-    border-radius: 10px; color: var(--fg-sub); font-size: 14px;
+    width: 100%; padding: 10px; background: transparent; border: none;
+    color: var(--fg); font-size: 12px; font-weight: 600;
     font-family: 'IBM Plex Sans KR', system-ui, sans-serif;
-    cursor: pointer; transition: opacity .15s; margin-top: 12px; margin-bottom: 6px;
+    cursor: pointer; transition: opacity .15s; margin-top: 10px; margin-bottom: 10px;
+    text-align: center;
   }
-  .btn-retry:hover { opacity: .65; }
+  .btn-retry:hover { opacity: .5; }
+  .btn-stats-primary {
+    width: 100%; padding: 14px; background: var(--accent); color: #fff;
+    border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+    font-family: 'IBM Plex Sans KR', system-ui, sans-serif;
+    cursor: pointer; transition: opacity .15s, transform .1s; margin-bottom: 40px;
+  }
+  .btn-stats-primary:hover { opacity: .88; }
+  .btn-stats-primary:active { transform: scale(.99); }
 
   /* ── STATS ── */
   .stats-hero { text-align: center; padding: 48px 24px 40px; }
@@ -492,7 +501,7 @@
       <button class="btn-copy" id="btn-copy" onclick="copyResult()">📋 결과 복사하기</button>
     </div>
     <button class="btn-retry" onclick="goToFormInput()">↩ 다시 테스트하기</button>
-    <button class="btn-stats" onclick="goStats()">📊 다른 스프린터 유형 분포 보기</button>
+    <button class="btn-stats-primary" onclick="goStats()">📊 다른 스프린터 유형 분포 보기</button>
   </div>
 
   <!-- ════════════════ STATS ════════════════ -->
