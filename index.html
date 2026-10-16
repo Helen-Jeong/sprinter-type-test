@@ -74,13 +74,13 @@
   }
   .intro-step {
     font-family: 'IBM Plex Mono', monospace; font-size: 10px;
-    letter-spacing: 1.2px; color: var(--fg-sub); margin-bottom: 28px;
+    letter-spacing: 1.2px; color: var(--fg-sub); margin-bottom: 43px;
   }
   .spotlight-circle {
     width: 160px; height: 160px;
     background: radial-gradient(circle, var(--accent-soft) 0%, rgba(123,114,204,.06) 65%, transparent 100%);
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 74px; margin-top: 16px; margin-bottom: 48px;
+    font-size: 74px; margin-top: 16px; margin-bottom: 63px;
     box-shadow: 0 0 0 18px rgba(123,114,204,.06), 0 0 0 36px rgba(123,114,204,.03);
     animation: spotlight-pulse 3s ease-in-out infinite;
   }
@@ -164,7 +164,7 @@
     width: 100%; padding: 11px; background: transparent;
     border: 1px solid var(--border); border-radius: 10px; color: var(--fg-sub);
     font-size: 13px; font-family: 'IBM Plex Sans KR', system-ui, sans-serif;
-    cursor: pointer; transition: opacity .15s, border-color .15s; margin-top: 12px; font-weight: 700; margin-bottom: 40px;
+    cursor: pointer; transition: opacity .15s, border-color .15s; margin-top: 8px; font-weight: 700; margin-bottom: 8px;
   }
   .btn-stats:hover { opacity: .75; border-color: var(--accent); }
 
@@ -321,7 +321,7 @@
     width: 100%; padding: 13px; background: transparent; border: 1px solid var(--border);
     border-radius: 10px; color: var(--fg-sub); font-size: 14px;
     font-family: 'IBM Plex Sans KR', system-ui, sans-serif;
-    cursor: pointer; transition: opacity .15s; margin-top: 12px; margin-bottom: 12px;
+    cursor: pointer; transition: opacity .15s; margin-top: 12px; margin-bottom: 6px;
   }
   .btn-retry:hover { opacity: .65; }
 
@@ -683,6 +683,11 @@ function show(id) {
 }
 
 function goToFormInput() {
+  const currentScreen = document.querySelector('.screen.active');
+  if (!currentScreen || currentScreen.id !== 'sc-intro') {
+    show('sc-form');
+    return;
+  }
   const circle = document.querySelector('.spotlight-circle');
   const card   = document.querySelector('.intro-card');
 
