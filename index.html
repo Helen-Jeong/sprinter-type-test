@@ -321,7 +321,7 @@
     width: 100%; padding: 10px; background: transparent; border: none;
     color: var(--fg); font-size: 12px; font-weight: 600;
     font-family: 'IBM Plex Sans KR', system-ui, sans-serif;
-    cursor: pointer; transition: opacity .15s; margin-top: 4px; margin-bottom: 10px;
+    cursor: pointer; transition: opacity .15s; margin-top: 16px; margin-bottom: 4px;
     text-align: center;
   }
   .btn-retry:hover { opacity: .5; }
@@ -335,11 +335,38 @@
   .btn-stats-primary:active { transform: scale(.99); }
 
   /* ── STATS ── */
-  .stats-hero { text-align: center; padding: 48px 24px 40px; }
-  .stats-emoji { font-size: 64px; display: block; margin-bottom: 20px; animation: floaty 3s ease-in-out infinite; }
-  .stats-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
-  .stats-sub { font-size: 13px; color: var(--fg-sub); line-height: 1.75; }
-  .stats-animals { font-size: 28px; margin-top: 16px; letter-spacing: 4px; }
+  .st-loading { text-align:center; padding:60px 0 40px; color:var(--fg-sub); font-size:13px; }
+  .st-loading p { margin-top:14px; }
+  .st-error-box { text-align:center; padding:50px 0; color:var(--fg-sub); font-size:13px; }
+  .st-error-box p { margin:12px 0 18px; }
+  .st-retry-btn { padding:9px 22px; background:var(--accent-soft); border:1px solid var(--accent); border-radius:8px; color:var(--accent); font-size:13px; cursor:pointer; font-family:'IBM Plex Sans KR',sans-serif; }
+  .st-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:12px; overflow:hidden; }
+  .st-sec-title { font-family:'Do Hyeon',sans-serif; font-size:18px; color:var(--fg); margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+  .st-sec-num { font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700; color:var(--accent); background:var(--accent-soft); border-radius:6px; padding:2px 8px; letter-spacing:1px; }
+  .st-donut-wrap { display:flex; align-items:center; gap:14px; }
+  .st-legend { display:grid; grid-template-columns:8px 1.4em auto 34px; align-items:center; gap:7px 9px; flex:1; min-width:0; }
+  .st-legend-row { display:contents; }
+  .st-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .st-l-emoji { font-size:13px; }
+  .st-l-name { font-size:11px; color:var(--fg-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .st-l-pct { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:700; text-align:right; }
+  .st-note { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--fg-sub); margin-top:12px; letter-spacing:.3px; }
+  .st-cohort-list { display:flex; flex-direction:column; gap:14px; }
+  .st-cohort-row { display:flex; flex-direction:column; gap:6px; }
+  .st-cohort-label { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:700; color:var(--fg-sub); display:flex; align-items:center; gap:6px; }
+  .st-cohort-label.me { color:var(--accent); }
+  .st-bar { display:flex; height:30px; border-radius:99px; overflow:hidden; gap:2px; }
+  .st-seg { height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .st-seg-txt { font-size:9px; font-weight:700; color:rgba(255,255,255,.92); white-space:nowrap; line-height:1; }
+  .st-course-grid { display:flex; flex-direction:column; margin:0 -20px -20px; }
+  .st-course-row { display:flex; }
+  .st-course-cell { flex:1; padding:14px; display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .st-course-name { font-size:11px; font-weight:700; color:var(--fg); }
+  .st-course-sub { font-size:10px; color:var(--fg-sub); margin-top:2px; line-height:1.4; }
+  .st-chips { display:flex; gap:3px; }
+  .st-chip { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:7px; padding:6px 2px; gap:2px; }
+  .st-chip-emoji { font-size:12px; line-height:1; }
+  .st-chip-pct { font-family:'IBM Plex Mono',monospace; font-size:8px; font-weight:700; line-height:1; }
 
   /* ── MODAL (이전 결과) ── */
   .modal-overlay {
@@ -506,14 +533,47 @@
 
   <!-- ════════════════ STATS ════════════════ -->
   <div id="sc-stats" class="screen">
-    <div class="card">
-      <div class="stats-hero">
-        <span class="stats-emoji">📊</span>
-        <p class="stats-title">통계 준비 중이에요!</p>
-        <p class="stats-sub">더 많은 스프린터들이 참여한 후<br>과정·기수별 유형 통계를 보여드릴게요</p>
-        <p class="stats-animals">🦉 🐹 🦦 🐆 🐬</p>
-      </div>
+
+    <!-- 로딩 -->
+    <div id="st-loading" class="st-loading">
+      <span style="font-size:36px">⏳</span>
+      <p>통계 불러오는 중...</p>
     </div>
+
+    <!-- 에러 -->
+    <div id="st-error" hidden class="st-error-box">
+      <span style="font-size:32px">⚠️</span>
+      <p>통계를 불러오지 못했어요</p>
+      <button class="st-retry-btn" onclick="retryStats()">다시 시도</button>
+    </div>
+
+    <!-- 콘텐츠 -->
+    <div id="st-content" hidden>
+
+      <!-- 01 전체 스프린터 분포 -->
+      <div class="st-card">
+        <div class="st-sec-title"><span class="st-sec-num">01</span>전체 스프린터 분포</div>
+        <div class="st-donut-wrap">
+          <div class="st-legend" id="st-legend"></div>
+          <svg id="st-donut" width="150" height="150" viewBox="0 0 150 150" style="flex-shrink:0"></svg>
+        </div>
+        <p class="st-note" id="st-note"></p>
+      </div>
+
+      <!-- 02 내 과정 기수별 -->
+      <div class="st-card" id="st-cohort-card">
+        <div class="st-sec-title"><span class="st-sec-num">02</span><span id="st-cohort-title">내 과정 기수별</span></div>
+        <div id="st-cohort-list" class="st-cohort-list"></div>
+      </div>
+
+      <!-- 03 다른 과정 전체 -->
+      <div class="st-card">
+        <div class="st-sec-title"><span class="st-sec-num">03</span>다른 과정 전체</div>
+        <div id="st-course-grid" class="st-course-grid"></div>
+      </div>
+
+    </div>
+
     <button class="btn-retry" onclick="goToFormInput()">← 돌아가기</button>
   </div>
 
@@ -654,7 +714,7 @@ const TYPES = [
   },
 ];
 
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyfS9efgAmpEyTmpQtSt4Qre8FtgGE4uZaAaG6NEE2uNZS1aQ3xfpA6LOBQJpCV5NsjSQ/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyMU_oz6F7PVgKs7vJM6mNZ0HZNyM3EerXAu6m5ZV9ZsEqZv3SO7RX3qi530s3-lHFK1w/exec';
 const COURSE_NAMES = {
   FS:'풀스택 엔지니어', FESI:'프론트엔드 단기심화', DA:'데이터 분석가',
   PD:'프로덕트 디자인', IF:'IT 서비스 창업', AI:'AI 엔지니어', SB:'Spring 백엔드'
@@ -767,7 +827,7 @@ function goIntro() {
   show('sc-intro');
 }
 
-function goStats() { show('sc-stats'); }
+function goStats() { show('sc-stats'); if (!statsLoaded) loadStats(); }
 
 function routeFromHash() {
   const hash = location.hash;
@@ -918,5 +978,151 @@ function copyResult() {
     btn.textContent = '위 텍스트를 직접 복사해주세요';
     setTimeout(() => { btn.textContent = '📋 결과 복사하기'; }, 2500);
   });
+}
+
+/* ════════════════ 통계 ════════════════ */
+let statsLoaded = false;
+
+async function loadStats() {
+  const loadEl  = document.getElementById('st-loading');
+  const errEl   = document.getElementById('st-error');
+  const content = document.getElementById('st-content');
+  loadEl.hidden = false; errEl.hidden = true; content.hidden = true;
+
+  try {
+    const url = WEBHOOK_URL + '?action=stats' +
+      (userCourse ? '&course=' + encodeURIComponent(userCourse) : '');
+    const res  = await fetch(url, { redirect: 'follow' });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderStats(data);
+    loadEl.hidden = true; content.hidden = false;
+    statsLoaded = true;
+  } catch(e) {
+    loadEl.hidden = true; errEl.hidden = false;
+  }
+}
+
+function retryStats() { statsLoaded = false; loadStats(); }
+
+function renderStats(data) {
+  const { totalCount = 0, totalPct = [], cohorts = [], courses = [] } = data;
+
+  /* 01 도넛 */
+  renderStDonut(totalPct);
+  document.getElementById('st-note').textContent =
+    '전체 응답자 ' + totalCount.toLocaleString() + '명 기준';
+
+  /* 02 코호트 */
+  const cohortCard = document.getElementById('st-cohort-card');
+  if (cohorts.length > 0) {
+    const cname = userCourse ? (COURSE_NAMES[userCourse] || userCourse) + ' 기수별 분포' : '기수별 분포';
+    document.getElementById('st-cohort-title').textContent = cname;
+    renderStCohorts(cohorts);
+    cohortCard.hidden = false;
+  } else {
+    cohortCard.hidden = true;
+  }
+
+  /* 03 과정 그리드 */
+  renderStCourses(courses);
+}
+
+/* 도넛 (path 기반) */
+function renderStDonut(pct) {
+  const svg = document.getElementById('st-donut');
+  svg.innerHTML = '';
+  const cx=75, cy=75, oR=71, iR=27, gapDeg=2;
+  const avail = 360 - gapDeg * TYPES.length;
+  function pt(r, deg) {
+    const a = (deg-90)*Math.PI/180;
+    return { x: cx+r*Math.cos(a), y: cy+r*Math.sin(a) };
+  }
+  function arc(s, e) {
+    const o1=pt(oR,s),o2=pt(oR,e),i1=pt(iR,e),i2=pt(iR,s),lg=(e-s>180)?1:0;
+    return `M${o1.x} ${o1.y} A${oR} ${oR} 0 ${lg} 1 ${o2.x} ${o2.y} L${i1.x} ${i1.y} A${iR} ${iR} 0 ${lg} 0 ${i2.x} ${i2.y}Z`;
+  }
+  let ang = 0;
+  pct.forEach((p, i) => {
+    const seg = (p/100)*avail;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', arc(ang+gapDeg/2, ang+gapDeg/2+seg));
+    path.setAttribute('fill', TYPES[i].color);
+    svg.appendChild(path);
+    ang += seg + gapDeg;
+  });
+  /* legend */
+  const legend = document.getElementById('st-legend');
+  legend.innerHTML = pct.map((p, i) =>
+    `<div class="st-legend-row">
+      <div class="st-dot" style="background:${TYPES[i].color}"></div>
+      <span class="st-l-emoji">${TYPES[i].emoji}</span>
+      <span class="st-l-name">${TYPES[i].name}</span>
+      <span class="st-l-pct" style="color:${TYPES[i].color}">${p}%</span>
+    </div>`
+  ).join('');
+}
+
+/* 코호트 막대 */
+function renderStCohorts(cohorts) {
+  const list = document.getElementById('st-cohort-list');
+  list.innerHTML = cohorts.map(c => {
+    const isMe = String(c.kisu) === String(userKisu);
+    const segs = TYPES.map((t, i) => {
+      const p = c.pct[i];
+      return `<div class="st-seg" style="flex:${p};background:${t.color}" title="${t.emoji} ${p}%">
+        <span class="st-seg-txt">${t.emoji} ${p}%</span>
+      </div>`;
+    }).join('');
+    return `<div class="st-cohort-row">
+      <div class="st-cohort-label${isMe?' me':''}">
+        ${c.kisu}기${isMe?' <span class="me-badge">내 기수</span>':''}
+      </div>
+      <div class="st-bar">${segs}</div>
+    </div>`;
+  }).join('');
+}
+
+/* 과정별 F-style 그리드 */
+function renderStCourses(courses) {
+  const grid = document.getElementById('st-course-grid');
+  const allP = courses.flatMap(c => c.pct);
+  const minP = Math.min(...allP), maxP = Math.max(...allP);
+  const INS = '12px';
+  const hLine = `background:linear-gradient(to right,transparent ${INS},var(--border) ${INS},var(--border) calc(100% - ${INS}),transparent calc(100% - ${INS}))`;
+  const vLine = `background:linear-gradient(to bottom,transparent ${INS},var(--border) ${INS},var(--border) calc(100% - ${INS}),transparent calc(100% - ${INS}))`;
+
+  function makeCell(c) {
+    const topIdx = c.pct.indexOf(Math.max(...c.pct));
+    const chips = TYPES.map((t, i) => {
+      const p = c.pct[i], norm = (p-minP)/(maxP-minP||1);
+      const alpha = Math.round((0.15+norm*0.70)*255).toString(16).padStart(2,'0');
+      const txtCol = norm > 0.5 ? 'rgba(255,255,255,.92)' : 'var(--fg-sub)';
+      const outl = i===topIdx ? '2px solid '+t.color : 'none';
+      return `<div class="st-chip" style="background:${t.color}${alpha};outline:${outl}">
+        <span class="st-chip-emoji">${t.emoji}</span>
+        <span class="st-chip-pct" style="color:${txtCol}">${p}%</span>
+      </div>`;
+    }).join('');
+    const top = TYPES[topIdx];
+    return `<div class="st-course-cell">
+      <div>
+        <div class="st-course-name">${c.name}</div>
+        <div class="st-course-sub">${top.emoji} ${top.name} 유형이 제일 많아요</div>
+      </div>
+      <div class="st-chips">${chips}</div>
+    </div>`;
+  }
+
+  let html = '';
+  for (let i = 0; i < courses.length; i += 2) {
+    if (i > 0) html += `<div style="height:1px;${hLine}"></div>`;
+    const c2 = courses[i+1];
+    html += `<div class="st-course-row">
+      ${makeCell(courses[i])}
+      ${c2 ? `<div style="width:1px;${vLine}"></div>${makeCell(c2)}` : '<div style="flex:1"></div>'}
+    </div>`;
+  }
+  grid.innerHTML = html;
 }
 </script>
