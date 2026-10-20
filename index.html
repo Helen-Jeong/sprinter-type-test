@@ -363,6 +363,10 @@
   .st-course-cell { flex:1; padding:14px; display:flex; flex-direction:column; gap:8px; min-width:0; }
   .st-course-name { font-size:11px; font-weight:700; color:var(--fg); }
   .st-course-sub { font-size:10px; color:var(--fg-sub); margin-top:2px; line-height:1.4; }
+  .st-cohort-empty { font-size:12px; color:var(--fg-sub); font-style:italic; padding:4px 0; }
+  .st-course-empty-msg { font-size:10px; color:var(--fg-sub); font-style:italic; margin-top:4px; line-height:1.4; }
+  .st-course-cell.st-course-empty { justify-content:center; min-height:60px; }
+  .st-empty-msg { font-size:13px; color:var(--fg-sub); text-align:center; padding:12px 0; }
   .st-chips { display:flex; gap:3px; }
   .st-chip { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:7px; padding:6px 2px; gap:2px; }
   .st-chip-emoji { font-size:12px; line-height:1; }
@@ -566,9 +570,9 @@
         <div id="st-cohort-list" class="st-cohort-list"></div>
       </div>
 
-      <!-- 03 다른 과정 전체 -->
-      <div class="st-card">
-        <div class="st-sec-title"><span class="st-sec-num">03</span>다른 과정 전체</div>
+      <!-- 02/03 과정 전체 -->
+      <div class="st-card" id="st-course-card">
+        <div class="st-sec-title"><span class="st-sec-num" id="st-course-num">03</span><span id="st-course-title">다른 과정 전체</span></div>
         <div id="st-course-grid" class="st-course-grid"></div>
       </div>
 
@@ -872,6 +876,7 @@ async function startQuiz() {
 
 function startQuizActual() {
   curQ = 0; answers = new Array(TOTAL).fill(null);
+  resultSubmitted = false; testCompleted = false; statsLoaded = false;
   show('sc-quiz'); renderQ();
 }
 
@@ -953,10 +958,16 @@ function renderResultScreen(t, doSubmit) {
     statusEl.textContent = '✅ 이전에 저장된 결과예요!';
   }
   show('sc-result');
-  if (doSubmit) submitResult(t);
+  if (doSubmit) {
+    testCompleted = true;
+    statsLoaded = false; // 테스트 완료 후 통계 재로딩 강제
+    submitResult(t);
+  }
 }
 
 function submitResult(t) {
+  if (resultSubmitted) return; // 중복 전송 방지
+  resultSubmitted = true;
   const el = document.getElementById('sub-status');
   el.className = 'sub-status show sending'; el.textContent = '⏳ 결과 저장 중...';
   fetch(WEBHOOK_URL, {
@@ -982,6 +993,8 @@ function copyResult() {
 
 /* ════════════════ 통계 ════════════════ */
 let statsLoaded = false;
+let testCompleted = false;
+let resultSubmitted = false;
 
 async function loadStats() {
   const loadEl  = document.getElementById('st-loading');
@@ -1013,43 +1026,54 @@ function renderStats(data) {
   document.getElementById('st-note').textContent =
     '전체 응답자 ' + totalCount.toLocaleString() + '명 기준';
 
-  /* 02 코호트 */
+  /* 섹션 가시성: testCompleted 여부에 따라 분기 */
   const cohortCard = document.getElementById('st-cohort-card');
-  if (cohorts.length > 0) {
+  const courseNum   = document.getElementById('st-course-num');
+  const courseTitle = document.getElementById('st-course-title');
+
+  if (testCompleted) {
+    /* 테스트 완료: 02 본인 과정 기수별 + 03 다른 과정 전체 */
+    cohortCard.hidden = false;
     const cname = userCourse ? (COURSE_NAMES[userCourse] || userCourse) + ' 기수별 분포' : '기수별 분포';
     document.getElementById('st-cohort-title').textContent = cname;
     renderStCohorts(cohorts);
-    cohortCard.hidden = false;
+    courseNum.textContent = '03';
+    courseTitle.textContent = '다른 과정 전체';
   } else {
+    /* 테스트 미완료: 01 + 02 과정별 분포만 */
     cohortCard.hidden = true;
+    courseNum.textContent = '02';
+    courseTitle.textContent = '과정별 분포';
   }
 
-  /* 03 과정 그리드 */
+  /* 과정 그리드 (항상 표시) */
   renderStCourses(courses);
 }
 
-/* 도넛 (path 기반) */
+/* 도넛 (path 기반, gap 없이 꽉 찬 형태) */
 function renderStDonut(pct) {
   const svg = document.getElementById('st-donut');
   svg.innerHTML = '';
-  const cx=75, cy=75, oR=71, iR=27, gapDeg=2;
-  const avail = 360 - gapDeg * TYPES.length;
+  const cx=75, cy=75, oR=71, iR=27;
   function pt(r, deg) {
     const a = (deg-90)*Math.PI/180;
     return { x: cx+r*Math.cos(a), y: cy+r*Math.sin(a) };
   }
   function arc(s, e) {
+    // 360도 완전한 원은 시작=끝이라 arc가 그려지지 않으므로 미세하게 보정
+    if (Math.abs(e - s) >= 359.999) e = s + 359.999;
     const o1=pt(oR,s),o2=pt(oR,e),i1=pt(iR,e),i2=pt(iR,s),lg=(e-s>180)?1:0;
     return `M${o1.x} ${o1.y} A${oR} ${oR} 0 ${lg} 1 ${o2.x} ${o2.y} L${i1.x} ${i1.y} A${iR} ${iR} 0 ${lg} 0 ${i2.x} ${i2.y}Z`;
   }
   let ang = 0;
   pct.forEach((p, i) => {
-    const seg = (p/100)*avail;
+    if (p <= 0) return;
+    const seg = (p/100)*360;
     const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', arc(ang+gapDeg/2, ang+gapDeg/2+seg));
+    path.setAttribute('d', arc(ang, ang+seg));
     path.setAttribute('fill', TYPES[i].color);
     svg.appendChild(path);
-    ang += seg + gapDeg;
+    ang += seg;
   });
   /* legend */
   const legend = document.getElementById('st-legend');
@@ -1066,11 +1090,31 @@ function renderStDonut(pct) {
 /* 코호트 막대 */
 function renderStCohorts(cohorts) {
   const list = document.getElementById('st-cohort-list');
-  list.innerHTML = cohorts.map(c => {
+  if (!cohorts.length) {
+    list.innerHTML = `<p class="st-empty-msg">아직 테스트한 스프린터가 없어요 👀</p>`;
+    return;
+  }
+
+  // min~max 기수 범위를 채워서 빈 기수는 placeholder 표시
+  const kisuNums = cohorts.map(c => Number(c.kisu));
+  const minK = Math.min(...kisuNums), maxK = Math.max(...kisuNums);
+  const allSlots = [];
+  for (let k = maxK; k >= minK; k--) {
+    const found = cohorts.find(c => Number(c.kisu) === k);
+    allSlots.push(found || { kisu: String(k), empty: true });
+  }
+
+  list.innerHTML = allSlots.map(c => {
+    if (c.empty) {
+      return `<div class="st-cohort-row">
+        <div class="st-cohort-label">${c.kisu}기</div>
+        <div class="st-cohort-empty">아직 테스트 전이에요 🐾</div>
+      </div>`;
+    }
     const isMe = String(c.kisu) === String(userKisu);
     const segs = TYPES.map((t, i) => {
-      const p = c.pct[i];
-      return `<div class="st-seg" style="flex:${p};background:${t.color}" title="${t.emoji} ${p}%">
+      const p = c.pct[i] || 0;
+      return `<div class="st-seg" style="flex:${p||0.5};background:${t.color}" title="${t.emoji} ${p}%">
         <span class="st-seg-txt">${t.emoji} ${p}%</span>
       </div>`;
     }).join('');
@@ -1083,16 +1127,44 @@ function renderStCohorts(cohorts) {
   }).join('');
 }
 
-/* 과정별 F-style 그리드 */
+/* 한국어 조사 helper (은/는) */
+function euneun(str) {
+  const code = str.charCodeAt(str.length - 1);
+  if (code < 0xAC00 || code > 0xD7A3) return str + '은(는)';
+  return (code - 0xAC00) % 28 !== 0 ? str + '은' : str + '는';
+}
+
+/* 과정별 F-style 그리드 — 항상 7개 전체 과정 표시 */
+const COURSE_ORDER = ['FS', 'FESI', 'DA', 'SB', 'AI', 'PD', 'IF'];
+
 function renderStCourses(courses) {
   const grid = document.getElementById('st-course-grid');
-  const allP = courses.flatMap(c => c.pct);
-  const minP = Math.min(...allP), maxP = Math.max(...allP);
+
+  // API 응답 → map 으로 변환
+  const courseMap = {};
+  courses.forEach(c => { courseMap[c.code] = c; });
+
+  // 항상 7개 전체 과정 (데이터 없으면 empty)
+  const allCourses = COURSE_ORDER.map(code =>
+    courseMap[code] || { code, name: COURSE_NAMES[code] || code, count: 0, pct: null }
+  );
+
+  // 글로벌 min/max는 데이터 있는 과정만 기준
+  const filledPcts = allCourses.filter(c => c.pct).flatMap(c => c.pct);
+  const minP = filledPcts.length ? Math.min(...filledPcts) : 0;
+  const maxP = filledPcts.length ? Math.max(...filledPcts) : 100;
+
   const INS = '12px';
   const hLine = `background:linear-gradient(to right,transparent ${INS},var(--border) ${INS},var(--border) calc(100% - ${INS}),transparent calc(100% - ${INS}))`;
   const vLine = `background:linear-gradient(to bottom,transparent ${INS},var(--border) ${INS},var(--border) calc(100% - ${INS}),transparent calc(100% - ${INS}))`;
 
   function makeCell(c) {
+    if (!c.pct) {
+      return `<div class="st-course-cell st-course-empty">
+        <div class="st-course-name">${c.name}</div>
+        <div class="st-course-empty-msg">${euneun(c.name)} 아직 테스트 전이에요 🐾</div>
+      </div>`;
+    }
     const topIdx = c.pct.indexOf(Math.max(...c.pct));
     const chips = TYPES.map((t, i) => {
       const p = c.pct[i], norm = (p-minP)/(maxP-minP||1);
@@ -1115,11 +1187,11 @@ function renderStCourses(courses) {
   }
 
   let html = '';
-  for (let i = 0; i < courses.length; i += 2) {
+  for (let i = 0; i < allCourses.length; i += 2) {
     if (i > 0) html += `<div style="height:1px;${hLine}"></div>`;
-    const c2 = courses[i+1];
+    const c2 = allCourses[i+1];
     html += `<div class="st-course-row">
-      ${makeCell(courses[i])}
+      ${makeCell(allCourses[i])}
       ${c2 ? `<div style="width:1px;${vLine}"></div>${makeCell(c2)}` : '<div style="flex:1"></div>'}
     </div>`;
   }
