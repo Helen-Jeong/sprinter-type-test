@@ -321,7 +321,7 @@
     width: 100%; padding: 10px; background: transparent; border: none;
     color: var(--fg); font-size: 12px; font-weight: 600;
     font-family: 'IBM Plex Sans KR', system-ui, sans-serif;
-    cursor: pointer; transition: opacity .15s; margin-top: 16px; margin-bottom: 4px;
+    cursor: pointer; transition: opacity .15s; margin-top: 10px; margin-bottom: 4px;
     text-align: center;
   }
   .btn-retry:hover { opacity: .5; }
@@ -509,6 +509,10 @@
 
   <!-- ════════════════ RESULT ════════════════ -->
   <div id="sc-result" class="screen">
+    <div style="text-align:center;margin-bottom:20px">
+      <span class="badge mono">CODEIT SPRINT @ TYPE TEST</span>
+      <h2 class="form-title">우리는 어떤 스프린터일까? ⚡</h2>
+    </div>
     <div class="res-hero" id="res-hero">
       <span class="res-big-emoji" id="res-emoji"></span>
       <p class="res-who" id="res-who"></p>
@@ -532,7 +536,7 @@
       <button class="btn-copy" id="btn-copy" onclick="copyResult()">📋 결과 복사하기</button>
     </div>
     <button class="btn-retry" onclick="goToFormInput()">↩ 다시 테스트하기</button>
-    <button class="btn-stats-primary" onclick="goStats()">📊 다른 스프린터 유형 분포 보기</button>
+    <button class="btn-stats-primary" onclick="goStats('result')">📊 다른 스프린터 유형 분포 보기</button>
   </div>
 
   <!-- ════════════════ STATS ════════════════ -->
@@ -553,6 +557,13 @@
 
     <!-- 콘텐츠 -->
     <div id="st-content" hidden>
+
+      <!-- 0건 빈 상태 -->
+      <div id="st-empty-state" hidden style="text-align:center;padding:60px 0 40px">
+        <span style="font-size:44px">🌱</span>
+        <p style="margin-top:18px;font-size:16px;font-weight:700;color:var(--fg)">아직 응답 데이터가 없어요!</p>
+        <p style="margin-top:8px;font-size:13px;line-height:1.8;color:var(--fg-sub)">테스트 참여자가 생기면<br>여기서 유형 분포를 확인할 수 있어요 🙂</p>
+      </div>
 
       <!-- 01 전체 스프린터 분포 -->
       <div class="st-card">
@@ -578,7 +589,7 @@
 
     </div>
 
-    <button class="btn-retry" onclick="goToFormInput()">← 돌아가기</button>
+    <button class="btn-retry" onclick="goBackFromStats()">← 돌아가기</button>
   </div>
 
   <!-- ════════════════ MODAL: 이전 결과 ════════════════ -->
@@ -831,7 +842,8 @@ function goIntro() {
   show('sc-intro');
 }
 
-function goStats() { show('sc-stats'); if (!statsLoaded) loadStats(); }
+function goStats(from) { statsFrom = from || 'form'; show('sc-stats'); if (!statsLoaded) loadStats(); }
+function goBackFromStats() { if (statsFrom === 'result') show('sc-result'); else show('sc-form'); }
 
 function routeFromHash() {
   const hash = location.hash;
@@ -995,6 +1007,7 @@ function copyResult() {
 let statsLoaded = false;
 let testCompleted = false;
 let resultSubmitted = false;
+let statsFrom = 'form';
 
 async function loadStats() {
   const loadEl  = document.getElementById('st-loading');
@@ -1021,13 +1034,27 @@ function retryStats() { statsLoaded = false; loadStats(); }
 function renderStats(data) {
   const { totalCount = 0, totalPct = [], cohorts = [], courses = [] } = data;
 
+  const emptyState = document.getElementById('st-empty-state');
+  const cohortCard = document.getElementById('st-cohort-card');
+  const courseCard = document.getElementById('st-course-card');
+
+  /* 0건: 빈 상태 메시지만 표시 */
+  if (totalCount === 0) {
+    emptyState.hidden = false;
+    cohortCard.hidden = true;
+    courseCard.hidden = true;
+    document.querySelector('.st-card').hidden = true; // 도넛 카드
+    return;
+  }
+  emptyState.hidden = true;
+  document.querySelector('.st-card').hidden = false;
+
   /* 01 도넛 */
   renderStDonut(totalPct);
   document.getElementById('st-note').textContent =
     '전체 응답자 ' + totalCount.toLocaleString() + '명 기준';
 
   /* 섹션 가시성: testCompleted 여부에 따라 분기 */
-  const cohortCard = document.getElementById('st-cohort-card');
   const courseNum   = document.getElementById('st-course-num');
   const courseTitle = document.getElementById('st-course-title');
 
