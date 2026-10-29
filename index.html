@@ -321,7 +321,7 @@
     width: 100%; padding: 10px; background: transparent; border: none;
     color: var(--fg); font-size: 12px; font-weight: 600;
     font-family: 'IBM Plex Sans KR', system-ui, sans-serif;
-    cursor: pointer; transition: opacity .15s; margin-top: 10px; margin-bottom: 4px;
+    cursor: pointer; transition: opacity .15s; margin-top: 6px; margin-bottom: 4px;
     text-align: center;
   }
   .btn-retry:hover { opacity: .5; }
@@ -548,7 +548,7 @@
   <div id="sc-stats" class="screen">
     <div style="text-align:center;margin-bottom:24px">
       <span class="badge mono">CODEIT SPRINT @ TYPE TEST</span>
-      <h2 class="form-title">나는 어떤 스프린터일까? ⚡</h2>
+      <h2 class="form-title">우리는 어떤 스프린터일까? ⚡️</h2>
     </div>
 
     <!-- 로딩 -->
@@ -1074,6 +1074,10 @@ function renderStats(data) {
   const courseNum   = document.getElementById('st-course-num');
   const courseTitle = document.getElementById('st-course-title');
 
+  /* 03 과정 그리드: 항상 표시 */
+  courseCard.hidden = false;
+  courseNum.textContent = '03';
+
   if (testCompleted) {
     /* 테스트 완료: 02 본인 과정 기수별 + 03 다른 과정 전체 */
     cohortCard.hidden = false;
@@ -1081,12 +1085,10 @@ function renderStats(data) {
       (userCourse ? (COURSE_NAMES[userCourse] || userCourse) + ' 기수별 분포' : '기수별 분포');
     document.getElementById('st-cohort-title').textContent = cname;
     renderStCohorts(cohorts);
-    courseNum.textContent = '03';
     courseTitle.textContent = '다른 과정 전체';
   } else {
-    /* 테스트 미완료: 01 + 02 과정별 분포만 */
+    /* 테스트 미완료: 01 + 03 과정별 분포 */
     cohortCard.hidden = true;
-    courseNum.textContent = '02';
     courseTitle.textContent = '과정별 분포';
   }
 
