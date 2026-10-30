@@ -917,6 +917,7 @@ function closeModalGoResult() {
   if (!prevResultData) return;
   const t = TYPES.find(t => t.name === prevResultData.typeName);
   if (!t) { startQuizActual(); return; }
+  testCompleted = true;
   renderResultScreen(t, false);
 }
 
