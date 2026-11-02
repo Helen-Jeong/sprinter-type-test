@@ -343,34 +343,82 @@
   .st-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:12px; overflow:hidden; }
   .st-sec-title { font-family:'Do Hyeon',sans-serif; font-size:18px; color:var(--fg); margin-bottom:16px; display:flex; align-items:center; gap:10px; }
   .st-sec-num { font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700; color:var(--accent); background:var(--accent-soft); border-radius:6px; padding:2px 8px; letter-spacing:1px; }
-  .st-donut-wrap { display:flex; align-items:center; gap:14px; }
-  .st-legend { display:grid; grid-template-columns:8px 1.4em max-content max-content; align-items:center; gap:7px 8px; flex:1; min-width:0; }
-  .st-legend-row { display:contents; }
-  .st-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-  .st-l-emoji { font-size:13px; }
-  .st-l-name { font-size:11px; color:var(--fg-sub); white-space:nowrap; }
-  .st-l-pct { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:700; padding-left:32px; }
   .st-note { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--fg-sub); margin-top:12px; letter-spacing:.3px; }
-  .st-cohort-list { display:flex; flex-direction:column; gap:14px; }
-  .st-cohort-row { display:flex; flex-direction:column; gap:6px; }
-  .st-cohort-label { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:700; color:var(--fg-sub); display:flex; align-items:center; gap:6px; }
-  .st-cohort-label.me { color:var(--accent); }
-  .st-bar { display:flex; height:30px; border-radius:99px; overflow:hidden; gap:2px; }
-  .st-seg { height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-  .st-seg-txt { font-size:9px; font-weight:700; color:rgba(255,255,255,.92); white-space:nowrap; line-height:1; }
-  .st-course-grid { display:flex; flex-direction:column; margin:0 -20px -20px; }
-  .st-course-row { display:flex; }
-  .st-course-cell { flex:1; padding:14px; display:flex; flex-direction:column; gap:8px; min-width:0; }
-  .st-course-name { font-size:11px; font-weight:700; color:var(--fg); }
-  .st-course-sub { font-size:10px; color:var(--fg-sub); margin-top:2px; line-height:1.4; }
   .st-cohort-empty { font-size:12px; color:var(--fg-sub); font-style:italic; padding:4px 0; }
-  .st-course-empty-msg { font-size:10px; color:var(--fg-sub); font-style:italic; margin-top:4px; line-height:1.4; }
-  .st-course-cell.st-course-empty { justify-content:center; min-height:60px; }
   .st-empty-msg { font-size:13px; color:var(--fg-sub); text-align:center; padding:12px 0; }
-  .st-chips { display:flex; gap:3px; }
-  .st-chip { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:7px; padding:6px 2px; gap:2px; }
-  .st-chip-emoji { font-size:12px; line-height:1; }
-  .st-chip-pct { font-family:'IBM Plex Mono',monospace; font-size:8px; font-weight:700; line-height:1; }
+
+  /* ── STATS 목업 디자인 ── */
+  /* 2-column 패널 */
+  .st-divider-v { background:var(--border); }
+  .st-panel { padding:18px 16px; }
+  @media(max-width:500px){
+    .st-panel-right { border-top:1px solid var(--border); }
+    .st-divider-v { display:none; }
+  }
+  .st-panel-label { font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700; color:var(--accent); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
+  .st-panel-title { font-family:'Do Hyeon',sans-serif; font-size:14px; margin-bottom:14px; line-height:1.3; color:var(--fg); }
+  /* 내 기수 막대 */
+  #st-kisu-bars { display:grid; grid-template-columns:auto 1fr auto; column-gap:8px; row-gap:4px; align-items:center; }
+  .t-namerow { display:flex; align-items:center; gap:6px; }
+  .t-emoji { font-size:13px; flex-shrink:0; line-height:1; }
+  .t-name { font-size:11px; font-weight:700; }
+  .t-pct { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; }
+  .bar-track { height:7px; background:var(--border); border-radius:99px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:99px; }
+  /* 다른 기수 비교 */
+  .kisu-row { margin-bottom:10px; }
+  .kisu-row:last-child { margin-bottom:0; }
+  .kisu-meta { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+  .kisu-num { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; color:var(--fg-sub); }
+  .kisu-count { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--fg-sub); }
+  .now-badge { font-size:9px; background:var(--accent-soft); color:var(--accent); border-radius:99px; padding:1px 7px; font-weight:700; }
+  .kisu-bar { display:flex; height:10px; border-radius:6px; overflow:hidden; gap:1px; }
+  .kisu-seg { flex-shrink:0; }
+  .kisu-row.current .kisu-num { color:var(--accent); }
+  .kisu-row.current .kisu-bar { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
+  /* sec-title 아이콘 */
+  .sec-emoji { font-size:18px; line-height:1; }
+  /* Hot / Extreme 문항 */
+  .hot-box { border:1.5px dashed var(--border); border-radius:12px; padding:16px; text-align:center; }
+  .hot-label { font-size:9px; font-weight:700; color:var(--fg-sub); letter-spacing:1.5px; margin-bottom:10px; }
+  .hot-sample { background:var(--bg); border-radius:10px; padding:12px 14px; text-align:left; margin-bottom:8px; }
+  .hot-q { font-size:11px; font-weight:700; margin-bottom:8px; line-height:1.5; }
+  .hot-options { display:flex; gap:6px; }
+  .hot-opt { flex:1; border-radius:8px; padding:8px 10px; font-size:11px; font-weight:700; text-align:center; }
+  .hot-opt-pct { font-family:'IBM Plex Mono',monospace; font-size:13px; display:block; margin-bottom:2px; }
+  .hot-api-note { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--fg-sub); margin-top:4px; }
+  .vs-row { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+  .vs-tag { font-size:15px; font-weight:800; letter-spacing:-0.3px; }
+  .vs-label { font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700; color:var(--fg-sub); letter-spacing:3px; padding:0 2px; }
+  /* Heatmap */
+  .hm-scroll { overflow-x:auto; }
+  .hm-grid { display:grid; grid-template-columns:auto repeat(5,1fr); gap:3px; min-width:300px; }
+  .hm-head { font-size:12px; display:flex; flex-direction:column; align-items:center; gap:3px; padding:4px 2px; }
+  .hm-head-name { font-size:9px; color:var(--fg-sub); text-align:center; line-height:1.3; }
+  .hm-course { font-size:10px; font-weight:700; color:var(--fg-sub); display:flex; align-items:center; padding:0 8px 0 0; white-space:nowrap; }
+  .hm-cell { font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:700; border-radius:7px; padding:7px 2px; text-align:center; }
+  /* NC 전용 */
+  .nc-duo { display:grid; grid-template-columns:1fr 1px 1fr; overflow:hidden; }
+  .nc-duo-divider { background:var(--border); }
+  .nc-duo-cell { padding:22px 16px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:7px; }
+  .nc-duo-label { font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700; letter-spacing:2px; color:var(--fg-sub); }
+  .nc-duo-emoji { font-size:44px; line-height:1; }
+  .nc-duo-name { font-size:11px; font-weight:700; color:var(--fg); line-height:1.4; }
+  .nc-duo-stat { font-family:'Do Hyeon',sans-serif; font-size:28px; line-height:1; }
+  /* NC 도넛 레전드 */
+  .legend-row { display:grid; grid-template-columns:8px 1.3em max-content max-content; align-items:center; gap:6px 7px; margin-bottom:6px; }
+  .legend-row:last-child { margin-bottom:0; }
+  .l-dot { width:8px; height:8px; border-radius:50%; }
+  .l-emoji { font-size:12px; }
+  .l-name { font-size:10px; color:var(--fg-sub); }
+  .l-pct { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; padding-left:16px; }
+  /* NC 타입 행 */
+  #nc-type-rows { display:grid; grid-template-columns:1.5em auto 1fr auto; align-items:center; column-gap:8px; row-gap:12px; }
+  .nc-t-emoji { font-size:20px; line-height:1; }
+  .nc-t-name { font-size:11px; font-weight:700; white-space:nowrap; }
+  .nc-t-track { height:9px; background:var(--border); border-radius:99px; overflow:hidden; }
+  .nc-t-fill { height:100%; border-radius:99px; }
+  .nc-t-pct { font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:700; text-align:right; min-width:40px; }
 
   /* ── MODAL (이전 결과) ── */
   .modal-overlay {
@@ -470,7 +518,7 @@
 
     <div class="card">
       <div class="field">
-        <label for="inp-course">과정 // TRACK</label>
+        <label for="inp-course">과정 | TRACK</label>
         <div class="select-wrap">
           <select id="inp-course">
             <option value="">과정을 선택해주세요</option>
@@ -481,16 +529,15 @@
             <option value="IF">IT 서비스 창업 (IF)</option>
             <option value="AI">AI 엔지니어 (AI)</option>
             <option value="SB">Spring 백엔드 (SB)</option>
-            <option value="EX">운영진 (EX)</option>
           </select>
         </div>
       </div>
       <div class="field">
-        <label for="inp-kisu">기수 // COHORT</label>
+        <label for="inp-kisu">기수 | COHORT</label>
         <input type="number" id="inp-kisu" placeholder="예) 17" min="1" max="99">
       </div>
       <div class="field">
-        <label for="inp-name">이름 // NAME</label>
+        <label for="inp-name">이름 | NAME</label>
         <input type="text" id="inp-name" placeholder="이름을 입력해주세요">
       </div>
       <p class="err-msg" id="err-msg">과정, 기수, 이름을 모두 입력해주세요!</p>
@@ -503,7 +550,7 @@
   <div id="sc-quiz" class="screen">
     <div class="prog-area">
       <div class="prog-meta">
-        <span class="prog-label">// 진행도</span>
+        <span class="prog-label">👀 진행도</span>
         <span class="prog-count" id="prog-count">1 / 10</span>
       </div>
       <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
@@ -525,18 +572,18 @@
       <span class="res-chip" id="res-chip"></span>
     </div>
     <div class="res-card">
-      <p class="sec-label">// 🔎 DESCRIPTION</p>
+      <p class="sec-label">🔎 DESCRIPTION</p>
       <p class="res-desc" id="res-desc"></p>
       <p class="res-tags" id="res-traits"></p>
     </div>
     <div class="res-card res-card-dark">
-      <p class="res-dark-header">// 💞 BEST MATCH</p>
+      <p class="res-dark-header">💞 BEST MATCH</p>
       <div class="res-dark-content"><p class="res-compat-line" id="res-compat-line"></p></div>
     </div>
     <div id="sub-status" class="sub-status"></div>
     <p class="share-notice">👇 아래 버튼으로 결과를 복사해서<br><span class="notag">#소통_할까요</span> 채널이나 팀원들과 공유해봐요!</p>
     <div class="share-box">
-      <p class="sec-label">// 📤 SHARE</p>
+      <p class="sec-label">📤 SHARE</p>
       <div class="share-text" id="share-text"></div>
       <button class="btn-copy" id="btn-copy" onclick="copyResult()">📋 결과 복사하기</button>
     </div>
@@ -574,27 +621,80 @@
         <p style="margin-top:8px;font-size:13px;line-height:1.8;color:var(--fg-sub)">테스트 참여자가 생기면<br>여기서 유형 분포를 확인할 수 있어요 🙂</p>
       </div>
 
-      <!-- 01 전체 스프린터 분포 -->
-      <div class="st-card">
-        <div class="st-sec-title"><span class="st-sec-num">01</span>전체 스프린터 분포</div>
-        <div class="st-donut-wrap">
-          <div class="st-legend" id="st-legend"></div>
-          <svg id="st-donut" width="150" height="150" viewBox="0 0 150 150" style="flex-shrink:0"></svg>
+      <!-- ══ testCompleted = true ══ -->
+      <div id="view-completed" hidden>
+
+        <!-- A: 2-column (내 기수 막대 + 다른 기수 비교) -->
+        <div class="st-card" style="padding:0;">
+          <div style="display:grid;grid-template-columns:1fr 1px 1fr;">
+            <div class="st-panel st-panel-left">
+              <div class="st-panel-label">내 과정 · 내 기수</div>
+              <div class="st-panel-title" id="st-my-kisu-title">기수 유형 분포</div>
+              <div id="st-kisu-bars"></div>
+            </div>
+            <div class="st-divider-v"></div>
+            <div class="st-panel st-panel-right">
+              <div class="st-panel-label">내 과정 · 다른 기수</div>
+              <div class="st-panel-title">기수별 유형 분포</div>
+              <div id="st-other-kisu"></div>
+            </div>
+          </div>
         </div>
-        <p class="st-note" id="st-note"></p>
-      </div>
 
-      <!-- 02 내 과정 기수별 -->
-      <div class="st-card" id="st-cohort-card">
-        <div class="st-sec-title"><span class="st-sec-num">02</span><span id="st-cohort-title">내 과정 기수별</span></div>
-        <div id="st-cohort-list" class="st-cohort-list"></div>
-      </div>
+        <!-- B: 핫이슈 분석 -->
+        <div class="st-card">
+          <div class="st-sec-title"><span class="st-sec-num">HOT</span>스프린터 설문 핫이슈</div>
+          <div class="hot-box" id="st-hot-box-completed" hidden>
+            <div class="hot-label">⚡ 가장 팽팽하게 갈린 문항</div>
+            <div id="hot-sample-hot"></div>
+            <div class="hot-label" style="margin-top:14px;">↔ 가장 극명하게 나뉜 문항</div>
+            <div id="hot-sample-extreme"></div>
+            <p class="hot-api-note">* 실제 제출 데이터 기반이에요</p>
+          </div>
+        </div>
 
-      <!-- 02/03 과정 전체 -->
-      <div class="st-card" id="st-course-card">
-        <div class="st-sec-title"><span class="st-sec-num" id="st-course-num">03</span><span id="st-course-title">다른 과정 전체</span></div>
-        <div id="st-course-grid" class="st-course-grid"></div>
-      </div>
+        <!-- 전체 과정별 유형 분포 히트맵 -->
+        <div class="st-card">
+          <div class="st-sec-title"><span class="sec-emoji">🗺️</span>전체 과정별 유형 분포</div>
+          <div class="hm-scroll"><div class="hm-grid" id="heatmap"></div></div>
+        </div>
+
+      </div><!-- /view-completed -->
+
+      <!-- ══ testCompleted = false ══ -->
+      <div id="view-not-completed" hidden>
+
+        <!-- 1위 & 희귀 유형 -->
+        <div class="st-card nc-duo" id="nc-duo" style="padding:0;"></div>
+
+        <!-- 전체 스프린터 분포 -->
+        <div class="st-card">
+          <div class="st-sec-title" style="font-size:14px;margin-bottom:16px;"><span class="sec-emoji">📊</span>전체 스프린터 분포</div>
+          <div style="display:flex;justify-content:center;margin-bottom:18px;">
+            <svg id="donut-nc-svg" width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0;"></svg>
+          </div>
+          <div id="nc-legend" style="margin-bottom:18px;"></div>
+          <div id="nc-type-rows"></div>
+        </div>
+
+        <!-- 핫이슈 (not-completed) -->
+        <div class="st-card" id="st-hot-nc-card" hidden>
+          <div class="st-sec-title" style="font-size:14px;margin-bottom:16px;"><span class="st-sec-num">HOT</span>스프린터 설문 핫이슈</div>
+          <div class="hot-box" style="border:none;padding:0;text-align:left;">
+            <div class="hot-label">⚡ 가장 팽팽하게 갈린 문항</div>
+            <div id="hot-sample-hot-nc"></div>
+            <div class="hot-label" style="margin-top:14px;">↔ 가장 극명하게 나뉜 문항</div>
+            <div id="hot-sample-extreme-nc"></div>
+          </div>
+        </div>
+
+        <!-- 전체 과정별 유형 분포 (히트맵) -->
+        <div class="st-card">
+          <div class="st-sec-title" style="font-size:14px;margin-bottom:16px;"><span class="sec-emoji">🗺️</span>전체 과정별 유형 분포</div>
+          <div class="hm-scroll"><div class="hm-grid" id="heatmap-nc"></div></div>
+        </div>
+
+      </div><!-- /view-not-completed -->
 
     </div>
 
@@ -742,7 +842,7 @@ const TYPES = [
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyMU_oz6F7PVgKs7vJM6mNZ0HZNyM3EerXAu6m5ZV9ZsEqZv3SO7RX3qi530s3-lHFK1w/exec';
 const COURSE_NAMES = {
   FS:'풀스택 엔지니어', FESI:'프론트엔드 단기심화', DA:'데이터 분석가',
-  PD:'프로덕트 디자인', IF:'IT 서비스 창업', AI:'AI 엔지니어', SB:'Spring 백엔드', EX:'운영진'
+  PD:'프로덕트 디자인', IF:'IT 서비스 창업', AI:'AI 엔지니어', SB:'Spring 백엔드'
 };
 
 let curQ = 0, answers = new Array(TOTAL).fill(null);
@@ -1002,7 +1102,11 @@ function submitResult(t) {
   fetch(WEBHOOK_URL, {
     method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ kisu: userKisu, name: userName, course: userCourse, typeEmoji: t.emoji, typeName: t.name })
+    body: JSON.stringify({
+      kisu: userKisu, name: userName, course: userCourse,
+      typeEmoji: t.emoji, typeName: t.name,
+      answers: answers.map((a, qi) => a !== null ? QS[qi].opts[a].tp : null),
+    })
   })
   .then(() => { el.className = 'sub-status show ok'; el.textContent = '✅ 결과가 시트에 저장됐어요!'; })
   .catch(() => { el.className = 'sub-status show fail'; el.textContent = '⚠️ 저장 실패 (결과는 확인 가능해요)'; });
@@ -1048,137 +1152,240 @@ async function loadStats() {
 
 function retryStats() { statsLoaded = false; loadStats(); }
 
+const TYPE_RGB = ['155,143,214','232,168,56','80,191,160','224,112,112','107,170,223'];
+const COURSE_NAMES_SHORT = {
+  FS:'풀스택', FESI:'FE심화', DA:'데이터', SB:'Spring', AI:'AI', PD:'프로덕트', IF:'IT창업'
+};
+
 function renderStats(data) {
-  const { totalCount = 0, totalPct = [], cohorts = [], courses = [] } = data;
+  const {
+    totalCount = 0, totalPct = [], cohorts = [], courses = [],
+    hotIdx = null, hotPcts = [50,50], extremeIdx = null, extremePcts = [50,50],
+  } = data;
 
   const emptyState = document.getElementById('st-empty-state');
-  const cohortCard = document.getElementById('st-cohort-card');
-  const courseCard = document.getElementById('st-course-card');
 
-  /* 0건: 빈 상태 메시지만 표시 */
   if (totalCount === 0) {
     emptyState.hidden = false;
-    cohortCard.hidden = true;
-    courseCard.hidden = true;
-    document.querySelector('.st-card').hidden = true; // 도넛 카드
+    document.getElementById('view-completed').hidden = true;
+    document.getElementById('view-not-completed').hidden = true;
     return;
   }
   emptyState.hidden = true;
-  document.querySelector('.st-card').hidden = false;
-
-  /* 01 도넛 */
-  renderStDonut(totalPct);
-  document.getElementById('st-note').textContent =
-    '전체 응답자 ' + totalCount.toLocaleString() + '명 기준';
-
-  /* 섹션 가시성: testCompleted 여부에 따라 분기 */
-  const courseNum   = document.getElementById('st-course-num');
-  const courseTitle = document.getElementById('st-course-title');
-
-  /* 03 과정 그리드: 항상 표시 */
-  courseCard.hidden = false;
-  courseNum.textContent = '03';
 
   if (testCompleted) {
-    /* 테스트 완료: 02 본인 과정 기수별 + 03 다른 과정 전체 */
-    cohortCard.hidden = false;
-    const cname = userCourse === 'EX' ? '운영진 분포' :
-      (userCourse ? (COURSE_NAMES[userCourse] || userCourse) + ' 기수별 분포' : '기수별 분포');
-    document.getElementById('st-cohort-title').textContent = cname;
-    renderStCohorts(cohorts);
-    courseTitle.textContent = '다른 과정 전체';
+    document.getElementById('view-completed').hidden = false;
+    document.getElementById('view-not-completed').hidden = true;
+    renderMyKisuBars(cohorts, totalPct);
+    renderOtherKisu(cohorts);
+    renderCompletedHot(hotIdx, hotPcts, extremeIdx, extremePcts);
+    renderHeatmap('heatmap', courses);
   } else {
-    /* 테스트 미완료: 01 + 03 과정별 분포 */
-    cohortCard.hidden = true;
-    courseTitle.textContent = '과정별 분포';
+    document.getElementById('view-completed').hidden = true;
+    document.getElementById('view-not-completed').hidden = false;
+    renderNcDuo(totalPct, totalCount);
+    renderDonutNC(totalPct);
+    renderNcTypeRows(totalPct);
+    renderNcHot(hotIdx, hotPcts, extremeIdx, extremePcts);
+    renderHeatmap('heatmap-nc', courses);
   }
-
-  /* 과정 그리드 (항상 표시) */
-  renderStCourses(courses);
 }
 
-/* 도넛 (path 기반, gap 없이 꽉 찬 형태) */
-function renderStDonut(pct) {
-  const svg = document.getElementById('st-donut');
-  svg.innerHTML = '';
-  const cx=75, cy=75, oR=71, iR=27;
-  function pt(r, deg) {
-    const a = (deg-90)*Math.PI/180;
-    return { x: cx+r*Math.cos(a), y: cy+r*Math.sin(a) };
+/* 내 기수 막대 (completed 왼쪽 패널) */
+function renderMyKisuBars(cohorts, totalPct) {
+  const el = document.getElementById('st-kisu-bars');
+  const titleEl = document.getElementById('st-my-kisu-title');
+  const myCohort = cohorts.find(c => String(c.kisu) === String(userKisu));
+  const pct = myCohort ? myCohort.pct : totalPct;
+  if (myCohort) {
+    titleEl.textContent = (COURSE_NAMES[userCourse] || userCourse) + ' ' + userKisu + '기 분포';
+  } else {
+    titleEl.textContent = '전체 스프린터 분포';
   }
-  function arc(s, e) {
-    // 360도 완전한 원은 시작=끝이라 arc가 그려지지 않으므로 미세하게 보정
-    if (Math.abs(e - s) >= 359.999) e = s + 359.999;
-    const o1=pt(oR,s),o2=pt(oR,e),i1=pt(iR,e),i2=pt(iR,s),lg=(e-s>180)?1:0;
-    return `M${o1.x} ${o1.y} A${oR} ${oR} 0 ${lg} 1 ${o2.x} ${o2.y} L${i1.x} ${i1.y} A${iR} ${iR} 0 ${lg} 0 ${i2.x} ${i2.y}Z`;
-  }
-  let ang = 0;
-  pct.forEach((p, i) => {
-    if (p <= 0) return;
-    const seg = (p/100)*360;
-    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', arc(ang, ang+seg));
-    path.setAttribute('fill', TYPES[i].color);
-    svg.appendChild(path);
-    ang += seg;
-  });
-  /* legend */
-  const legend = document.getElementById('st-legend');
-  legend.innerHTML = pct.map((p, i) =>
-    `<div class="st-legend-row">
-      <div class="st-dot" style="background:${TYPES[i].color}"></div>
-      <span class="st-l-emoji">${TYPES[i].emoji}</span>
-      <span class="st-l-name">${TYPES[i].name}</span>
-      <span class="st-l-pct" style="color:${TYPES[i].color}">${p}%</span>
-    </div>`
-  ).join('');
+  const maxPct = Math.max(...pct);
+  el.innerHTML = TYPES.map((t, i) => {
+    const prop = maxPct > 0 ? Math.round((pct[i] / maxPct) * 100) : 0;
+    return `<div class="t-namerow"><span class="t-emoji">${t.emoji}</span><span class="t-name" style="color:${t.color}">${t.name}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${prop}%;background:${t.color}"></div></div>
+      <span class="t-pct" style="color:${t.color}">${pct[i]}%</span>`;
+  }).join('');
 }
 
-/* 코호트 막대 */
-function renderStCohorts(cohorts) {
-  const list = document.getElementById('st-cohort-list');
-
-  // 과정별 고정 기수 범위 사용 (없으면 실제 데이터 범위)
+/* 다른 기수 비교 (completed 오른쪽 패널) */
+function renderOtherKisu(cohorts) {
+  const el = document.getElementById('st-other-kisu');
+  if (!cohorts.length) {
+    el.innerHTML = '<div class="st-cohort-empty">기수 데이터가 없어요</div>';
+    return;
+  }
   const range = COURSE_KISU_RANGE[userCourse];
-  let minK, maxK;
+  let slots = cohorts.slice().sort((a,b) => Number(b.kisu)-Number(a.kisu));
   if (range) {
-    [minK, maxK] = range;
-  } else {
-    if (!cohorts.length) {
-      list.innerHTML = `<p class="st-empty-msg">아직 테스트한 스프린터가 없어요 👀</p>`;
-      return;
+    const [minK, maxK] = range;
+    slots = [];
+    for (let k = maxK; k >= minK; k--) {
+      const found = cohorts.find(c => Number(c.kisu) === k);
+      slots.push(found || { kisu: String(k), empty: true });
     }
-    const kisuNums = cohorts.map(c => Number(c.kisu));
-    minK = Math.min(...kisuNums); maxK = Math.max(...kisuNums);
   }
-
-  const allSlots = [];
-  for (let k = maxK; k >= minK; k--) {
-    const found = cohorts.find(c => Number(c.kisu) === k);
-    allSlots.push(found || { kisu: String(k), empty: true });
-  }
-
-  list.innerHTML = allSlots.map(c => {
+  el.innerHTML = slots.map(c => {
     if (c.empty) {
-      return `<div class="st-cohort-row">
-        <div class="st-cohort-label">${c.kisu}기</div>
-        <div class="st-cohort-empty">아직 테스트 전이에요 🐾</div>
+      return `<div class="kisu-row">
+        <div class="kisu-meta"><span class="kisu-num">${c.kisu}기</span></div>
+        <div class="st-cohort-empty">아직 참여 전 🐾</div>
       </div>`;
     }
     const isMe = String(c.kisu) === String(userKisu);
-    const segs = TYPES.map((t, i) => {
-      const p = c.pct[i] || 0;
-      return `<div class="st-seg" style="flex:${p||0.5};background:${t.color}" title="${t.emoji} ${p}%">
-        <span class="st-seg-txt">${t.emoji} ${p}%</span>
-      </div>`;
-    }).join('');
-    return `<div class="st-cohort-row">
-      <div class="st-cohort-label${isMe?' me':''}">
-        ${c.kisu}기${isMe?' <span class="me-badge">내 기수</span>':''}
+    return `<div class="kisu-row${isMe?' current':''}">
+      <div class="kisu-meta">
+        <span class="kisu-num">${c.kisu}기</span>
+        ${isMe ? '<span class="now-badge">내 기수</span>' : ''}
+        <span class="kisu-count" style="margin-left:auto">${c.count}명</span>
       </div>
-      <div class="st-bar">${segs}</div>
+      <div class="kisu-bar">
+        ${TYPES.map((t,i) => c.pct[i]>0
+          ? `<div class="kisu-seg" style="flex:${c.pct[i]};background:${t.color}${isMe?'':'CC'}"></div>`
+          : '').join('')}
+      </div>
     </div>`;
   }).join('');
+}
+
+/* 핫이슈 샘플 HTML (공통) */
+function renderHotSample(qIdx, pcts) {
+  if (qIdx === null || qIdx < 0 || qIdx >= ST_QUESTIONS.length) return '';
+  const q = ST_QUESTIONS[qIdx];
+  return `<div class="hot-sample">
+    <div class="hot-q">${q.q}</div>
+    <div class="hot-options">
+      <div class="hot-opt" style="background:${q.bgColors[0]};color:${q.fgColors[0]};">
+        <span class="hot-opt-pct">${pcts[0]}%</span>${q.opts[0]}
+      </div>
+      <div class="hot-opt" style="background:${q.bgColors[1]};color:${q.fgColors[1]};">
+        <span class="hot-opt-pct">${pcts[1]}%</span>${q.opts[1]}
+      </div>
+    </div>
+    <div class="vs-row">
+      <span class="vs-tag" style="color:${q.fgColors[0]};">${q.factions[0]}</span>
+      <span class="vs-label">VS</span>
+      <span class="vs-tag" style="color:${q.fgColors[1]};">${q.factions[1]}</span>
+    </div>
+  </div>`;
+}
+
+/* Completed 뷰 핫이슈 */
+function renderCompletedHot(hotIdx, hotPcts, extremeIdx, extremePcts) {
+  const box = document.getElementById('st-hot-box-completed');
+  if (hotIdx === null && extremeIdx === null) { box.hidden = true; return; }
+  box.hidden = false;
+  document.getElementById('hot-sample-hot').innerHTML = renderHotSample(hotIdx, hotPcts);
+  document.getElementById('hot-sample-extreme').innerHTML = renderHotSample(extremeIdx, extremePcts);
+}
+
+/* Not-completed 뷰 핫이슈 */
+function renderNcHot(hotIdx, hotPcts, extremeIdx, extremePcts) {
+  const card = document.getElementById('st-hot-nc-card');
+  if (hotIdx === null && extremeIdx === null) { card.hidden = true; return; }
+  card.hidden = false;
+  document.getElementById('hot-sample-hot-nc').innerHTML = renderHotSample(hotIdx, hotPcts);
+  document.getElementById('hot-sample-extreme-nc').innerHTML = renderHotSample(extremeIdx, extremePcts);
+}
+
+/* NC 1위 · 희귀 카드 */
+function renderNcDuo(totalPct, totalCount) {
+  const el = document.getElementById('nc-duo');
+  if (!el) return;
+  const topIdx = totalPct.indexOf(Math.max(...totalPct));
+  const nonZero = totalPct.map((p,i) => ({p,i})).filter(x => x.p > 0);
+  const rareItem = nonZero.length ? nonZero.reduce((a,b) => a.p <= b.p ? a : b) : {p:0,i:0};
+  const rareIdx = rareItem.i;
+  const top = TYPES[topIdx], rare = TYPES[rareIdx];
+  const rareCount = Math.round(totalPct[rareIdx] / 100 * totalCount);
+  el.innerHTML = `
+    <div class="nc-duo-cell">
+      <div class="nc-duo-label">🏆 현재 1위 유형</div>
+      <div class="nc-duo-emoji">${top.emoji}</div>
+      <div class="nc-duo-name">${top.name}</div>
+      <div class="nc-duo-stat" style="color:${top.color}">${totalPct[topIdx]}%</div>
+    </div>
+    <div class="nc-duo-divider"></div>
+    <div class="nc-duo-cell">
+      <div class="nc-duo-label">👀 희귀 유형</div>
+      <div class="nc-duo-emoji">${rare.emoji}</div>
+      <div class="nc-duo-name">${rare.name}</div>
+      <div class="nc-duo-stat" style="color:${rare.color}">${rareCount > 0 ? '단 '+rareCount+'명' : totalPct[rareIdx]+'%'}</div>
+    </div>`;
+}
+
+/* NC 도넛 */
+function renderDonutNC(totalPct) {
+  const svg = document.getElementById('donut-nc-svg');
+  if (!svg) return;
+  const cx=70, cy=70, r=53, stroke=20;
+  let ang = -Math.PI/2;
+  svg.innerHTML = totalPct.map((p, i) => {
+    if (!p) return '';
+    const seg = (p/100)*2*Math.PI;
+    const x1=cx+r*Math.cos(ang), y1=cy+r*Math.sin(ang);
+    ang += seg;
+    const x2=cx+r*Math.cos(ang-0.001), y2=cy+r*Math.sin(ang-0.001);
+    return `<path d="M${x1} ${y1} A${r} ${r} 0 ${p>50?1:0} 1 ${x2} ${y2}" fill="none" stroke="${TYPES[i].color}" stroke-width="${stroke}" stroke-linecap="butt"/>`;
+  }).join('') + `<circle cx="${cx}" cy="${cy}" r="${r-stroke/2}" fill="var(--surface)"/>`;
+  const leg = document.getElementById('nc-legend');
+  if (leg) leg.innerHTML = TYPES.map((t,i) => `
+    <div class="legend-row">
+      <div class="l-dot" style="background:${t.color}"></div>
+      <span class="l-emoji">${t.emoji}</span>
+      <span class="l-name">${t.name}</span>
+      <span class="l-pct" style="color:${t.color}">${totalPct[i]}%</span>
+    </div>`).join('');
+}
+
+/* NC 타입 행 */
+function renderNcTypeRows(totalPct) {
+  const el = document.getElementById('nc-type-rows');
+  if (!el) return;
+  const maxPct = Math.max(...totalPct);
+  const items = TYPES.map((t,i) => ({...t, pct:totalPct[i]})).sort((a,b) => b.pct-a.pct);
+  el.innerHTML = items.map(t => {
+    const prop = maxPct > 0 ? Math.round((t.pct/maxPct)*100) : 0;
+    return `<span class="nc-t-emoji">${t.emoji}</span>
+      <span class="nc-t-name">${t.name}</span>
+      <div class="nc-t-track"><div class="nc-t-fill" style="width:${prop}%;background:${t.color}"></div></div>
+      <span class="nc-t-pct" style="color:${t.color}">${t.pct}%</span>`;
+  }).join('');
+}
+
+/* 히트맵 */
+function renderHeatmap(elId, courses) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const courseMap = {};
+  courses.forEach(c => { courseMap[c.code] = c; });
+  let html = '<div></div>';
+  html += TYPES.map(t =>
+    `<div class="hm-head"><span>${t.emoji}</span><span class="hm-head-name">${t.name.split(' ').slice(-1)[0]}</span></div>`
+  ).join('');
+  COURSE_ORDER.forEach(code => {
+    const c = courseMap[code];
+    const rowName = COURSE_NAMES_SHORT[code] || code;
+    if (!c) {
+      html += `<div class="hm-course">${rowName}</div>`;
+      html += TYPES.map((_,i) => `<div class="hm-cell" style="background:rgba(${TYPE_RGB[i]},0.06);color:var(--fg-sub)">—</div>`).join('');
+      return;
+    }
+    const pct = c.pct;
+    const maxPct = Math.max(...pct);
+    html += `<div class="hm-course">${rowName}</div>`;
+    html += pct.map((p, i) => {
+      const isTop = p === maxPct && p > 0;
+      const base = Math.min(0.85, 0.05+(p/50)*0.85);
+      const alpha = isTop ? Math.min(1, base+0.3) : base;
+      const textColor = p > 20 || isTop ? '#fff' : TYPES[i].color;
+      return `<div class="hm-cell${isTop?' top':''}" style="background:rgba(${TYPE_RGB[i]},${alpha.toFixed(2)});color:${textColor}">${p}%</div>`;
+    }).join('');
+  });
+  el.innerHTML = html;
 }
 
 /* 한국어 조사 helper (은/는) */
@@ -1191,70 +1398,24 @@ function euneun(str) {
 /* 과정별 고정 기수 범위 */
 const COURSE_KISU_RANGE = {
   AI: [12, 16], PD: [10, 14], DA: [16, 19],
-  IF: [3, 6], SB: [13, 16], FS: [14, 17], EX: [99, 99]
+  IF: [3, 6], SB: [13, 16], FS: [14, 17]
 };
 
-/* 과정별 F-style 그리드 — 항상 7개 전체 과정 표시 (EX 제외) */
+/* ── 문항별 파벌 메타 (stats 화면 HOT/EXTREME 표시용) ── */
+const ST_QUESTIONS = [
+  { q:"수업을 주로 듣는 장소는?",              factions:["혼자파","함께파"],     fgColors:["#E07070","#6BAADF"], bgColors:["rgba(224,112,112,.15)","rgba(107,170,223,.15)"], opts:["혼자만의 공간에서 집중","동기들과 함께"] },
+  { q:"내 Zep 캐릭터 꾸미기 스타일은?",        factions:["실용파","개성파"],     fgColors:["#E8A838","#6BAADF"], bgColors:["rgba(232,168,56,.15)","rgba(107,170,223,.15)"],  opts:["깔끔하고 단정하게","개성 있게 눈에 띄게"] },
+  { q:"강의 들을 때 나는?",                    factions:["혼자집중파","소통파"],  fgColors:["#E8A838","#50BFA0"], bgColors:["rgba(232,168,56,.15)","rgba(80,191,160,.15)"],   opts:["꼼꼼히 필기하며 정리","핵심 파악하며 빠르게"] },
+  { q:"과제 시작 시기는?",                     factions:["혼자시작파","함께파"],  fgColors:["#9B8FD6","#E8A838"], bgColors:["rgba(155,143,214,.15)","rgba(232,168,56,.15)"],  opts:["마감 직전, 집중력 폭발","강의 끝나자마자 바로"] },
+  { q:"모르는 개념 나왔을 때 나는?",            factions:["혼자파","질문파"],     fgColors:["#E07070","#50BFA0"], bgColors:["rgba(224,112,112,.15)","rgba(80,191,160,.15)"],  opts:["혼자 검색해서 해결","디스코드·동기에게 질문"] },
+  { q:"디스코드에서 나는?",                    factions:["조용파","활발파"],     fgColors:["#9B8FD6","#50BFA0"], bgColors:["rgba(155,143,214,.15)","rgba(80,191,160,.15)"],  opts:["필요한 정보만 조용히","질문·답변·모집 활발하게"] },
+  { q:"팀 프로젝트에서 내 자연스러운 역할은?",  factions:["실행파","서포터파"],   fgColors:["#E07070","#6BAADF"], bgColors:["rgba(224,112,112,.15)","rgba(107,170,223,.15)"], opts:["실행·속도 중심 (실행가·선봉장)","조율·기록·지원 중심"] },
+  { q:"과제 완성 기준은?",                     factions:["자기기준파","외부기준파"], fgColors:["#E8A838","#E07070"], bgColors:["rgba(232,168,56,.15)","rgba(224,112,112,.15)"],  opts:["요구사항 100%, 마무리까지","기능 돌아가면 일단 제출"] },
+  { q:"번아웃 올 것 같을 때 나는?",            factions:["혼자극복파","공감파"],  fgColors:["#E07070","#50BFA0"], bgColors:["rgba(224,112,112,.15)","rgba(80,191,160,.15)"],  opts:["혼자 다잡고 극복","디코에 털어놓고 공감받아 회복"] },
+  { q:"스프린트 수료 후 내 목표는?",            factions:["독립파","협업파"],     fgColors:["#E07070","#6BAADF"], bgColors:["rgba(224,112,112,.15)","rgba(107,170,223,.15)"], opts:["빠른 취업·독립적 성장","동기들과 협업·창업 도전"] },
+];
+
+/* 과정별 고정 순서 */
 const COURSE_ORDER = ['FS', 'FESI', 'DA', 'SB', 'AI', 'PD', 'IF'];
 
-function renderStCourses(courses) {
-  const grid = document.getElementById('st-course-grid');
-
-  // API 응답 → map 으로 변환
-  const courseMap = {};
-  courses.forEach(c => { courseMap[c.code] = c; });
-
-  // 항상 7개 전체 과정 (데이터 없으면 empty)
-  const allCourses = COURSE_ORDER.map(code =>
-    courseMap[code] || { code, name: COURSE_NAMES[code] || code, count: 0, pct: null }
-  );
-
-  // 글로벌 min/max는 데이터 있는 과정만 기준
-  const filledPcts = allCourses.filter(c => c.pct).flatMap(c => c.pct);
-  const minP = filledPcts.length ? Math.min(...filledPcts) : 0;
-  const maxP = filledPcts.length ? Math.max(...filledPcts) : 100;
-
-  const INS = '12px';
-  const hLine = `background:linear-gradient(to right,transparent ${INS},var(--border) ${INS},var(--border) calc(100% - ${INS}),transparent calc(100% - ${INS}))`;
-  const vLine = `background:linear-gradient(to bottom,transparent ${INS},var(--border) ${INS},var(--border) calc(100% - ${INS}),transparent calc(100% - ${INS}))`;
-
-  function makeCell(c) {
-    if (!c.pct) {
-      return `<div class="st-course-cell st-course-empty">
-        <div class="st-course-name">${c.name}</div>
-        <div class="st-course-empty-msg">${euneun(c.name)} 아직 테스트 전이에요 🐾</div>
-      </div>`;
-    }
-    const topIdx = c.pct.indexOf(Math.max(...c.pct));
-    const chips = TYPES.map((t, i) => {
-      const p = c.pct[i], norm = (p-minP)/(maxP-minP||1);
-      const alpha = Math.round((0.15+norm*0.70)*255).toString(16).padStart(2,'0');
-      const txtCol = norm > 0.5 ? 'rgba(255,255,255,.92)' : 'var(--fg-sub)';
-      const outl = i===topIdx ? '2px solid '+t.color : 'none';
-      return `<div class="st-chip" style="background:${t.color}${alpha};outline:${outl}">
-        <span class="st-chip-emoji">${t.emoji}</span>
-        <span class="st-chip-pct" style="color:${txtCol}">${p}%</span>
-      </div>`;
-    }).join('');
-    const top = TYPES[topIdx];
-    return `<div class="st-course-cell">
-      <div>
-        <div class="st-course-name">${c.name}</div>
-        <div class="st-course-sub">${top.emoji} ${top.name} 유형이 제일 많아요</div>
-      </div>
-      <div class="st-chips">${chips}</div>
-    </div>`;
-  }
-
-  let html = '';
-  for (let i = 0; i < allCourses.length; i += 2) {
-    if (i > 0) html += `<div style="height:1px;${hLine}"></div>`;
-    const c2 = allCourses[i+1];
-    html += `<div class="st-course-row">
-      ${makeCell(allCourses[i])}
-      ${c2 ? `<div style="width:1px;${vLine}"></div>${makeCell(c2)}` : '<div style="flex:1"></div>'}
-    </div>`;
-  }
-  grid.innerHTML = html;
-}
 </script>
