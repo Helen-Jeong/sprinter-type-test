@@ -358,13 +358,26 @@
   .st-panel-label { font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700; color:var(--accent); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
   .st-panel-title { font-family:'Do Hyeon',sans-serif; font-size:14px; margin-bottom:14px; line-height:1.3; color:var(--fg); }
   /* 내 기수 막대 */
-  #st-kisu-bars { display:grid; grid-template-columns:auto 1fr auto; column-gap:8px; row-gap:4px; align-items:center; }
+  #st-kisu-bars { display:grid; grid-template-columns:auto 1fr auto; column-gap:8px; row-gap:2px; align-items:center; }
   .t-namerow { display:flex; align-items:center; gap:6px; }
   .t-emoji { font-size:13px; flex-shrink:0; line-height:1; }
   .t-name { font-size:11px; font-weight:700; }
+  .t-desc { font-size:9px; color:var(--fg-sub); white-space:nowrap; line-height:1.3; grid-column:2/-1; }
   .t-pct { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; }
-  .bar-track { height:7px; background:var(--border); border-radius:99px; overflow:hidden; }
+  .bar-track { grid-column:2/-1; height:7px; background:var(--border); border-radius:99px; overflow:hidden; }
   .bar-fill { height:100%; border-radius:99px; }
+  #st-kisu-insight { margin-top:12px; border-top:1px solid var(--border); padding-top:10px; }
+  .ki-item { font-size:10px; color:var(--fg-sub); line-height:1.8; padding:1px 0; }
+  .ki-item b { color:var(--fg); font-weight:700; }
+  .combo-card { background:var(--accent-soft); border-radius:12px; padding:14px 16px; margin-bottom:14px; }
+  .combo-label { font-size:10px; font-weight:700; color:var(--accent); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+  .combo-types { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .combo-badge { display:flex; align-items:center; gap:5px; background:var(--surface); border-radius:8px; padding:6px 10px; font-size:12px; font-weight:700; color:var(--fg); }
+  .combo-plus { font-size:16px; color:var(--fg-sub); }
+  .combo-desc { font-size:11px; color:var(--fg-sub); line-height:1.7; margin:0; }
+  .stat-pills { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px; }
+  .s-pill { background:var(--bg); border:1px solid var(--border); border-radius:99px; padding:5px 12px; font-size:11px; line-height:1.4; }
+  .s-pill strong { color:var(--accent); }
   /* 다른 기수 비교 */
   .kisu-row { margin-bottom:10px; }
   .kisu-row:last-child { margin-bottom:0; }
@@ -518,7 +531,7 @@
 
     <div class="card">
       <div class="field">
-        <label for="inp-course">과정 | TRACK</label>
+        <label for="inp-course">과정 // TRACK</label>
         <div class="select-wrap">
           <select id="inp-course">
             <option value="">과정을 선택해주세요</option>
@@ -533,11 +546,11 @@
         </div>
       </div>
       <div class="field">
-        <label for="inp-kisu">기수 | COHORT</label>
+        <label for="inp-kisu">기수 // COHORT</label>
         <input type="number" id="inp-kisu" placeholder="예) 17" min="1" max="99">
       </div>
       <div class="field">
-        <label for="inp-name">이름 | NAME</label>
+        <label for="inp-name">이름 // NAME</label>
         <input type="text" id="inp-name" placeholder="이름을 입력해주세요">
       </div>
       <p class="err-msg" id="err-msg">과정, 기수, 이름을 모두 입력해주세요!</p>
@@ -550,7 +563,7 @@
   <div id="sc-quiz" class="screen">
     <div class="prog-area">
       <div class="prog-meta">
-        <span class="prog-label">👀 진행도</span>
+        <span class="prog-label">// 진행도</span>
         <span class="prog-count" id="prog-count">1 / 10</span>
       </div>
       <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
@@ -572,18 +585,18 @@
       <span class="res-chip" id="res-chip"></span>
     </div>
     <div class="res-card">
-      <p class="sec-label">🔎 DESCRIPTION</p>
+      <p class="sec-label">// 🔎 DESCRIPTION</p>
       <p class="res-desc" id="res-desc"></p>
       <p class="res-tags" id="res-traits"></p>
     </div>
     <div class="res-card res-card-dark">
-      <p class="res-dark-header">💞 BEST MATCH</p>
+      <p class="res-dark-header">// 💞 BEST MATCH</p>
       <div class="res-dark-content"><p class="res-compat-line" id="res-compat-line"></p></div>
     </div>
     <div id="sub-status" class="sub-status"></div>
     <p class="share-notice">👇 아래 버튼으로 결과를 복사해서<br><span class="notag">#소통_할까요</span> 채널이나 팀원들과 공유해봐요!</p>
     <div class="share-box">
-      <p class="sec-label">📤 SHARE</p>
+      <p class="sec-label">// 📤 SHARE</p>
       <div class="share-text" id="share-text"></div>
       <button class="btn-copy" id="btn-copy" onclick="copyResult()">📋 결과 복사하기</button>
     </div>
@@ -637,15 +650,29 @@
               <div class="st-panel-label">내 과정 · 다른 기수</div>
               <div class="st-panel-title">기수별 유형 분포</div>
               <div id="st-other-kisu"></div>
+              <div id="st-kisu-insight"></div>
             </div>
           </div>
         </div>
 
-        <!-- B: 핫이슈 분석 -->
+        <!-- B: 기수 분석 카드 -->
+        <div class="st-card" id="st-analysis-card" hidden>
+          <div class="st-sec-title"><span class="st-sec-num">ANALYSIS</span><span id="st-analysis-title">기수 분석</span></div>
+          <div class="combo-card" id="st-combo-card"></div>
+          <div class="stat-pills" id="st-stat-pills"></div>
+          <div class="hot-box" id="st-hot-box-analysis" hidden>
+            <div class="hot-label">⚡ 전체 스프린터 — 가장 팽팽하게 갈린 문항</div>
+            <div id="hot-sample-hot-analysis"></div>
+            <div class="hot-label" style="margin-top:14px;">↔ 가장 극명하게 나뉜 문항</div>
+            <div id="hot-sample-extreme-analysis"></div>
+          </div>
+        </div>
+
+        <!-- C: 핫이슈 분석 -->
         <div class="st-card">
           <div class="st-sec-title"><span class="st-sec-num">HOT</span>스프린터 설문 핫이슈</div>
           <div class="hot-box" id="st-hot-box-completed" hidden>
-            <div class="hot-label">⚡ 가장 팽팽하게 갈린 문항</div>
+            <div class="hot-label">⚡ 전체 스프린터 — 가장 팽팽하게 갈린 문항</div>
             <div id="hot-sample-hot"></div>
             <div class="hot-label" style="margin-top:14px;">↔ 가장 극명하게 나뉜 문항</div>
             <div id="hot-sample-extreme"></div>
@@ -1178,6 +1205,8 @@ function renderStats(data) {
     document.getElementById('view-not-completed').hidden = true;
     renderMyKisuBars(cohorts, totalPct);
     renderOtherKisu(cohorts);
+    renderKisuInsight(cohorts);
+    renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremePcts);
     renderCompletedHot(hotIdx, hotPcts, extremeIdx, extremePcts);
     renderHeatmap('heatmap', courses);
   } else {
@@ -1206,8 +1235,10 @@ function renderMyKisuBars(cohorts, totalPct) {
   el.innerHTML = TYPES.map((t, i) => {
     const prop = maxPct > 0 ? Math.round((pct[i] / maxPct) * 100) : 0;
     return `<div class="t-namerow"><span class="t-emoji">${t.emoji}</span><span class="t-name" style="color:${t.color}">${t.name}</span></div>
+      <span class="t-pct" style="color:${t.color}">${pct[i]}%</span>
+      <span class="t-desc">${t.shortDesc || ''}</span>
       <div class="bar-track"><div class="bar-fill" style="width:${prop}%;background:${t.color}"></div></div>
-      <span class="t-pct" style="color:${t.color}">${pct[i]}%</span>`;
+      ${i < TYPES.length - 1 ? '<div style="grid-column:1/-1;height:6px"></div>' : ''}`;
   }).join('');
 }
 
@@ -1249,6 +1280,95 @@ function renderOtherKisu(cohorts) {
       </div>
     </div>`;
   }).join('');
+}
+
+/* 기수 인사이트 요약 (오른쪽 패널 하단) */
+function renderKisuInsight(cohorts) {
+  const el = document.getElementById('st-kisu-insight');
+  if (!el) return;
+  const myCohort = cohorts.find(c => String(c.kisu) === String(userKisu));
+  if (!myCohort || !myCohort.pct || myCohort.count < 1) { el.innerHTML = ''; return; }
+  const pct = myCohort.pct;
+  const count = myCohort.count;
+  const topIdx = pct.indexOf(Math.max(...pct));
+  const nonZero = pct.map((p,i) => ({p,i})).filter(x => x.p > 0);
+  const rareItem = nonZero.length ? nonZero.reduce((a,b) => a.p <= b.p ? a : b) : null;
+  const top = TYPES[topIdx];
+  const top2Sorted = pct.map((p,i) => ({p,i})).sort((a,b) => b.p-a.p).slice(0,2);
+  const top2Combined = top2Sorted[0].p + (top2Sorted[1]?.p || 0);
+  const lines = [];
+  lines.push(`<div class="ki-item">참여 인원: <b>${count}명</b></div>`);
+  lines.push(`<div class="ki-item">가장 많은 유형: <b>${top.emoji} ${top.name} ${pct[topIdx]}%</b></div>`);
+  if (top2Combined > 0 && top2Sorted.length >= 2) {
+    const t2 = TYPES[top2Sorted[1].i];
+    lines.push(`<div class="ki-item"><b>${top.name} + ${t2.name}</b>가 전체의 <b>${top2Combined}%</b> 차지</div>`);
+  }
+  if (rareItem && rareItem.p < pct[topIdx]) {
+    const rare = TYPES[rareItem.i];
+    const rareCount = Math.round(rareItem.p / 100 * count);
+    lines.push(`<div class="ki-item"><b>${rare.emoji} ${rare.name}</b>는 ${rareCount > 0 ? `단 ${rareCount}명` : '아직 0명 — 희귀!'}</div>`);
+  }
+  el.innerHTML = lines.join('');
+}
+
+/* 기수 ANALYSIS 카드 */
+function renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremePcts) {
+  const card = document.getElementById('st-analysis-card');
+  const comboEl = document.getElementById('st-combo-card');
+  const pillsEl = document.getElementById('st-stat-pills');
+  const titleEl = document.getElementById('st-analysis-title');
+  if (!card || !comboEl || !pillsEl) return;
+
+  const myCohort = cohorts.find(c => String(c.kisu) === String(userKisu));
+  const pct = myCohort ? myCohort.pct : totalPct;
+  const count = myCohort ? myCohort.count : 0;
+  const label = myCohort ? (COURSE_NAMES[userCourse] || userCourse) + ' ' + userKisu + '기' : '전체 스프린터';
+  if (titleEl) titleEl.textContent = label + ' 기수 분석';
+
+  const sorted = pct.map((p,i) => ({p,i})).sort((a,b) => b.p-a.p);
+  const top1 = TYPES[sorted[0].i], top2 = TYPES[sorted[1]?.i ?? sorted[0].i];
+  const top1pct = sorted[0].p, top2pct = sorted[1]?.p ?? 0;
+  const combined = top1pct + top2pct;
+  const rareItem = sorted[sorted.length-1];
+  const rare = TYPES[rareItem.i];
+  const rareCount = count > 0 ? Math.round(rareItem.p / 100 * count) : null;
+
+  comboEl.innerHTML = `
+    <div class="combo-label">🔥 대표 조합</div>
+    <div class="combo-types">
+      <div class="combo-badge"><span>${top1.emoji}</span><span>${top1.name}</span></div>
+      <span class="combo-plus">+</span>
+      <div class="combo-badge"><span>${top2.emoji}</span><span>${top2.name}</span></div>
+    </div>
+    <p class="combo-desc">${label}의 주력 유형 조합이에요. ${top1.name}형과 ${top2.name}형이 함께하면 든든한 팀이 될 거예요! 💪</p>`;
+
+  const pills = [];
+  if (count > 0) {
+    const top1Count = Math.round(top1pct / 100 * count);
+    pills.push(`<div class="s-pill">10명 중 <strong>${Math.round(top1pct/10)}명</strong>은 ${top1.emoji} ${top1.name}</div>`);
+  }
+  if (rareItem.p === 0) {
+    pills.push(`<div class="s-pill"><strong>${rare.name}형</strong>은 아직 0명 — 희귀!</div>`);
+  } else if (rareCount !== null && rareCount <= 2) {
+    pills.push(`<div class="s-pill">${rare.emoji} ${rare.name}는 <strong>단 ${rareCount}명</strong>의 무드메이커</div>`);
+  }
+  if (combined > 0) {
+    pills.push(`<div class="s-pill">${top1.name} + ${top2.name}가 <strong>${combined}%</strong> 차지</div>`);
+  }
+  pillsEl.innerHTML = pills.join('');
+
+  // HOT box inside analysis card
+  const hotBox = document.getElementById('st-hot-box-analysis');
+  if (hotBox) {
+    if (hotIdx === null && extremeIdx === null) { hotBox.hidden = true; }
+    else {
+      hotBox.hidden = false;
+      document.getElementById('hot-sample-hot-analysis').innerHTML = renderHotSample(hotIdx, hotPcts);
+      document.getElementById('hot-sample-extreme-analysis').innerHTML = renderHotSample(extremeIdx, extremePcts);
+    }
+  }
+
+  card.hidden = false;
 }
 
 /* 핫이슈 샘플 HTML (공통) */
