@@ -358,13 +358,14 @@
   .st-panel-label { font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700; color:var(--accent); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
   .st-panel-title { font-family:'Do Hyeon',sans-serif; font-size:14px; margin-bottom:14px; line-height:1.3; color:var(--fg); }
   /* 내 기수 막대 */
-  #st-kisu-bars { display:grid; grid-template-columns:auto 1fr auto; column-gap:8px; row-gap:2px; align-items:center; }
+  #st-my-kisu-title { font-size:26px; line-height:1.25; }
+  #st-kisu-bars { display:grid; grid-template-columns:1fr auto; column-gap:8px; row-gap:2px; align-items:start; }
   .t-namerow { display:flex; align-items:center; gap:6px; }
   .t-emoji { font-size:13px; flex-shrink:0; line-height:1; }
-  .t-name { font-size:11px; font-weight:700; }
-  .t-desc { font-size:9px; color:var(--fg-sub); white-space:nowrap; line-height:1.3; grid-column:2/-1; }
-  .t-pct { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; }
-  .bar-track { grid-column:2/-1; height:7px; background:var(--border); border-radius:99px; overflow:hidden; }
+  .t-name { font-size:12px; font-weight:700; color:var(--fg); }
+  .t-desc { font-size:9px; color:var(--fg-sub); white-space:nowrap; line-height:1.3; grid-column:1; }
+  .t-pct { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; align-self:center; }
+  .bar-track { grid-column:1/-1; height:7px; background:var(--border); border-radius:99px; overflow:hidden; }
   .bar-fill { height:100%; border-radius:99px; }
   #st-kisu-insight { margin-top:12px; border-top:1px solid var(--border); padding-top:10px; }
   .ki-item { font-size:10px; color:var(--fg-sub); line-height:1.8; padding:1px 0; }
@@ -660,6 +661,7 @@
           <div class="st-sec-title"><span class="st-sec-num">ANALYSIS</span><span id="st-analysis-title">기수 분석</span></div>
           <div class="combo-card" id="st-combo-card"></div>
           <div class="stat-pills" id="st-stat-pills"></div>
+          <div id="st-atmosphere" style="font-size:11px;color:var(--fg-sub);line-height:1.7;margin-bottom:14px;padding:10px 12px;background:var(--bg);border-radius:10px;border:1px solid var(--border);"></div>
           <div class="hot-box" id="st-hot-box-analysis" hidden>
             <div class="hot-label">⚡ 전체 스프린터 — 가장 팽팽하게 갈린 문항</div>
             <div id="hot-sample-hot-analysis"></div>
@@ -1181,7 +1183,7 @@ function retryStats() { statsLoaded = false; loadStats(); }
 
 const TYPE_RGB = ['155,143,214','232,168,56','80,191,160','224,112,112','107,170,223'];
 const COURSE_NAMES_SHORT = {
-  FS:'풀스택', FESI:'FE심화', DA:'데이터', SB:'Spring', AI:'AI', PD:'프로덕트', IF:'IT창업'
+  FS:'FS', FESI:'FESI', DA:'DA', SB:'SB', AI:'AI', PD:'PD', IF:'IF'
 };
 
 function renderStats(data) {
@@ -1227,18 +1229,18 @@ function renderMyKisuBars(cohorts, totalPct) {
   const myCohort = cohorts.find(c => String(c.kisu) === String(userKisu));
   const pct = myCohort ? myCohort.pct : totalPct;
   if (myCohort) {
-    titleEl.textContent = (COURSE_NAMES[userCourse] || userCourse) + ' ' + userKisu + '기 분포';
+    titleEl.innerHTML = (COURSE_NAMES[userCourse] || userCourse) + '<br>우리 ' + userKisu + '기의 분포';
   } else {
-    titleEl.textContent = '전체 스프린터 분포';
+    titleEl.innerHTML = '전체 스프린터<br>유형 분포';
   }
   const maxPct = Math.max(...pct);
   el.innerHTML = TYPES.map((t, i) => {
     const prop = maxPct > 0 ? Math.round((pct[i] / maxPct) * 100) : 0;
-    return `<div class="t-namerow"><span class="t-emoji">${t.emoji}</span><span class="t-name" style="color:${t.color}">${t.name}</span></div>
+    return `<div class="t-namerow"><span class="t-emoji">${t.emoji}</span><span class="t-name">${t.name}</span></div>
       <span class="t-pct" style="color:${t.color}">${pct[i]}%</span>
       <span class="t-desc">${t.shortDesc || ''}</span>
       <div class="bar-track"><div class="bar-fill" style="width:${prop}%;background:${t.color}"></div></div>
-      ${i < TYPES.length - 1 ? '<div style="grid-column:1/-1;height:6px"></div>' : ''}`;
+      ${i < TYPES.length - 1 ? '<div style="grid-column:1/-1;height:8px"></div>' : ''}`;
   }).join('');
 }
 
@@ -1301,12 +1303,12 @@ function renderKisuInsight(cohorts) {
   lines.push(`<div class="ki-item">가장 많은 유형: <b>${top.emoji} ${top.name} ${pct[topIdx]}%</b></div>`);
   if (top2Combined > 0 && top2Sorted.length >= 2) {
     const t2 = TYPES[top2Sorted[1].i];
-    lines.push(`<div class="ki-item"><b>${top.name} + ${t2.name}</b>가 전체의 <b>${top2Combined}%</b> 차지</div>`);
+    lines.push(`<div class="ki-item"><b>${top.name} + ${t2.name}</b>${igga(t2.name).slice(t2.name.length)} 전체의 <b>${top2Combined}%</b> 차지</div>`);
   }
   if (rareItem && rareItem.p < pct[topIdx]) {
     const rare = TYPES[rareItem.i];
     const rareCount = Math.round(rareItem.p / 100 * count);
-    lines.push(`<div class="ki-item"><b>${rare.emoji} ${rare.name}</b>는 ${rareCount > 0 ? `단 ${rareCount}명` : '아직 0명 — 희귀!'}</div>`);
+    lines.push(`<div class="ki-item"><b>${rare.emoji} ${rare.name}</b>${euneun(rare.name).slice(rare.name.length)} ${rareCount > 0 ? `단 ${rareCount}명` : '아직 0명 — 희귀!'}</div>`);
   }
   el.innerHTML = lines.join('');
 }
@@ -1329,9 +1331,8 @@ function renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremeP
   const top1 = TYPES[sorted[0].i], top2 = TYPES[sorted[1]?.i ?? sorted[0].i];
   const top1pct = sorted[0].p, top2pct = sorted[1]?.p ?? 0;
   const combined = top1pct + top2pct;
-  const rareItem = sorted[sorted.length-1];
-  const rare = TYPES[rareItem.i];
-  const rareCount = count > 0 ? Math.round(rareItem.p / 100 * count) : null;
+  const minPct = sorted[sorted.length-1].p;
+  const rareItems = sorted.filter(item => item.p === minPct);
 
   comboEl.innerHTML = `
     <div class="combo-label">🔥 대표 조합</div>
@@ -1340,22 +1341,49 @@ function renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremeP
       <span class="combo-plus">+</span>
       <div class="combo-badge"><span>${top2.emoji}</span><span>${top2.name}</span></div>
     </div>
-    <p class="combo-desc">${label}의 주력 유형 조합이에요. ${top1.name}형과 ${top2.name}형이 함께하면 든든한 팀이 될 거예요! 💪</p>`;
+    <p class="combo-desc">${label}의 주력 유형 조합이에요. ${top1.name}형${gwawa(top1.name + '형')} ${top2.name}형이 함께하면 든든한 팀이 될 거예요! 💪</p>`;
 
   const pills = [];
   if (count > 0) {
-    const top1Count = Math.round(top1pct / 100 * count);
-    pills.push(`<div class="s-pill">10명 중 <strong>${Math.round(top1pct/10)}명</strong>은 ${top1.emoji} ${top1.name}</div>`);
+    pills.push(`<div class="s-pill">10명 중 <strong>${Math.round(top1pct/10)}명</strong>${euneun('명')} ${top1.emoji} ${top1.name}</div>`);
   }
-  if (rareItem.p === 0) {
-    pills.push(`<div class="s-pill"><strong>${rare.name}형</strong>은 아직 0명 — 희귀!</div>`);
-  } else if (rareCount !== null && rareCount <= 2) {
-    pills.push(`<div class="s-pill">${rare.emoji} ${rare.name}는 <strong>단 ${rareCount}명</strong>의 무드메이커</div>`);
+  if (minPct === 0) {
+    if (rareItems.length === 1) {
+      const rT = TYPES[rareItems[0].i];
+      pills.push(`<div class="s-pill"><strong>${rT.name}형</strong>은 아직 0명 — 희귀!</div>`);
+    } else {
+      const rareNames = rareItems.map(item => TYPES[item.i].name + '형').join('과 ');
+      pills.push(`<div class="s-pill"><strong>${rareNames}</strong>은 아직 0명 — 희귀!</div>`);
+    }
+  } else {
+    const veryRare = rareItems.filter(item => count > 0 && Math.round(item.p / 100 * count) <= 2);
+    if (veryRare.length > 1) {
+      const rareNames = veryRare.map(item => TYPES[item.i].name + '형').join('과 ');
+      pills.push(`<div class="s-pill"><strong>${rareNames}</strong>은 소수 — 귀해요!</div>`);
+    } else if (veryRare.length === 1) {
+      const rT = TYPES[veryRare[0].i];
+      const rC = Math.round(veryRare[0].p / 100 * count);
+      pills.push(`<div class="s-pill">${rT.emoji} ${euneun(rT.name)} <strong>단 ${rC}명</strong>의 무드메이커</div>`);
+    }
   }
   if (combined > 0) {
-    pills.push(`<div class="s-pill">${top1.name} + ${top2.name}가 <strong>${combined}%</strong> 차지</div>`);
+    pills.push(`<div class="s-pill">${top1.name} + ${top2.name}${igga(top2.name)} <strong>${combined}%</strong> 차지</div>`);
   }
   pillsEl.innerHTML = pills.join('');
+
+  // 우리 과정 분위기 예측
+  const atmosEl = document.getElementById('st-atmosphere');
+  if (atmosEl) {
+    let atmosText = '🔮 우리 과정 분위기 예측 — ';
+    if (top1pct >= 50) {
+      atmosText += `${top1.name}형이 과반수! ${top1.shortDesc || ''} 분위기가 기수 전체에 흐를 것 같아요.`;
+    } else if (top1pct === top2pct) {
+      atmosText += `${top1.name}형과 ${top2.name}형이 팽팽하게 맞서는 기수예요. 서로의 스타일이 균형을 이루며 다양한 시너지를 낼 거예요.`;
+    } else {
+      atmosText += `${top1.name}형과 ${top2.name}형이 중심이 되는 기수예요. 두 유형이 어우러지며 ${label}만의 색깔을 만들어갈 거예요.`;
+    }
+    atmosEl.textContent = atmosText;
+  }
 
   // HOT box inside analysis card
   const hotBox = document.getElementById('st-hot-box-analysis');
@@ -1508,11 +1536,21 @@ function renderHeatmap(elId, courses) {
   el.innerHTML = html;
 }
 
-/* 한국어 조사 helper (은/는) */
+/* 한국어 조사 helpers */
 function euneun(str) {
   const code = str.charCodeAt(str.length - 1);
   if (code < 0xAC00 || code > 0xD7A3) return str + '은(는)';
   return (code - 0xAC00) % 28 !== 0 ? str + '은' : str + '는';
+}
+function igga(str) {
+  const code = str.charCodeAt(str.length - 1);
+  if (code < 0xAC00 || code > 0xD7A3) return str + '이(가)';
+  return (code - 0xAC00) % 28 !== 0 ? str + '이' : str + '가';
+}
+function gwawa(str) {
+  const code = str.charCodeAt(str.length - 1);
+  if (code < 0xAC00 || code > 0xD7A3) return str + '과(와)';
+  return (code - 0xAC00) % 28 !== 0 ? str + '과' : str + '와';
 }
 
 /* 과정별 고정 기수 범위 */
