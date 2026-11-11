@@ -32,7 +32,7 @@
     padding-inline: 20px; padding-block: 48px;
   }
 
-  .wrap { width: 100%; max-width: 560px; }
+  .wrap { width: 100%; max-width: 640px; }
   .screen { display: none; }
   .screen.active { display: block; }
 
@@ -361,12 +361,12 @@
   #st-my-kisu-title { font-size:21px; line-height:1.25; }
   #st-kisu-bars { display:flex; flex-direction:column; gap:14px; }
   .t-row { display:flex; align-items:center; gap:10px; padding:2px 0; }
-  .t-left { flex:1; min-width:0; }
+  .t-left { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
   .t-namerow { display:flex; align-items:center; gap:6px; }
   .t-emoji { font-size:13px; flex-shrink:0; line-height:1; }
   .t-name { font-size:12px; font-weight:700; color:var(--fg); }
   .t-desc { font-size:9px; color:var(--fg-sub); line-height:1.3; }
-  .t-right { width:95px; display:flex; flex-direction:column; align-items:stretch; gap:3px; }
+  .t-right { width:94px; display:flex; flex-direction:column; align-items:stretch; gap:4px; }
   .t-pct { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; text-align:right; }
   .bar-track { height:7px; background:var(--border); border-radius:99px; overflow:hidden; }
   .bar-fill { height:100%; border-radius:99px; }
@@ -399,6 +399,14 @@
   /* sec-title 아이콘 */
   .sec-emoji { font-size:18px; line-height:1; }
   /* Hot / Extreme 문항 */
+  /* 분위기 배너 */
+  .atmos-banner { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; background:var(--surface2); border-radius:12px; padding:14px 16px; }
+  .atmos-icon { font-size:30px; flex-shrink:0; line-height:1; padding-top:2px; }
+  .atmos-body { flex:1; min-width:0; }
+  .atmos-title { font-size:9px; font-weight:700; color:var(--fg-sub); letter-spacing:1.2px; text-transform:uppercase; margin-bottom:6px; }
+  .atmos-text { font-size:12px; color:var(--fg); line-height:1.65; margin-bottom:9px; }
+  .atmos-tags { display:flex; flex-wrap:wrap; gap:5px; }
+  .atmos-tag { font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:var(--accent-soft); color:var(--accent); border:1px solid rgba(123,114,204,.3); }
   .hot-box { border:1.5px dashed var(--border); border-radius:12px; padding:16px; text-align:center; }
   .hot-label { font-size:9px; font-weight:700; color:var(--fg-sub); letter-spacing:1.5px; margin-bottom:10px; }
   .hot-sample { background:var(--bg); border-radius:10px; padding:12px 14px; text-align:left; margin-bottom:8px; }
@@ -668,7 +676,7 @@
           <div class="st-sec-title"><span class="st-sec-num">ANALYSIS</span><span id="st-analysis-title">기수 분석</span></div>
           <div class="combo-card" id="st-combo-card"></div>
           <div class="stat-pills" id="st-stat-pills"></div>
-          <div id="st-atmosphere" style="font-size:11px;color:var(--fg-sub);line-height:1.7;margin-bottom:14px;padding:10px 12px;background:var(--bg);border-radius:10px;border:1px solid var(--border);"></div>
+          <div id="st-atmosphere"></div>
           <div class="hot-box" id="st-hot-box-analysis" hidden>
             <div class="hot-label">⚡ 전체 스프린터 — 가장 팽팽하게 갈린 문항</div>
             <div id="hot-sample-hot-analysis"></div>
@@ -875,7 +883,7 @@ const TYPES = [
   },
 ];
 
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwRWPVWGSSANASkdAOya2P0ccMUzON-NJUjSqYKT-rcm5ivTqT9NpSzWNxiW4gwYYaphg/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyMU_oz6F7PVgKs7vJM6mNZ0HZNyM3EerXAu6m5ZV9ZsEqZv3SO7RX3qi530s3-lHFK1w/exec';
 const COURSE_NAMES = {
   FS:'풀스택 엔지니어', FESI:'프론트엔드 단기심화', DA:'데이터 분석가',
   PD:'프로덕트 디자인', IF:'IT 서비스 창업', AI:'AI 엔지니어', SB:'Spring 백엔드'
@@ -1338,16 +1346,18 @@ function renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremeP
 
   comboEl.innerHTML = `
     <div class="combo-label">🔥 대표 조합</div>
-    <div class="combo-types">
-      <div class="combo-badge"><span>${top1.emoji}</span><span>${top1.name}</span></div>
-      <span class="combo-plus">+</span>
-      <div class="combo-badge"><span>${top2.emoji}</span><span>${top2.name}</span></div>
-    </div>
-    <p class="combo-desc">${label}의 주력 유형 조합이에요. ${top1.name}형, ${top2.name}형이 함께하면 든든한 팀이 될 거예요! 💪</p>`;
+    <div style="display:flex;align-items:center;gap:14px;margin-top:4px;">
+      <p class="combo-desc" style="flex:1;margin:0;">${label}의 주력 유형 조합이에요.<br>${top1.name}형, ${top2.name}형이 함께하면 든든한 팀이 될 거예요! 💪</p>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+        <div class="combo-badge"><span>${top1.emoji}</span><span>${top1.name}</span></div>
+        <span class="combo-plus">+</span>
+        <div class="combo-badge"><span>${top2.emoji}</span><span>${top2.name}</span></div>
+      </div>
+    </div>`;
 
   const pills = [];
   if (count > 0) {
-    pills.push(`<div class="s-pill">▸ 10명 중 <strong>${Math.round(top1pct/10)}명</strong>${euneun('명')} ${top1.emoji} ${top1.name}</div>`);
+    pills.push(`<div class="s-pill">▸ 10명 중 <strong>${Math.round(top1pct/10)}명</strong>은 ${top1.emoji} ${top1.name}</div>`);
   }
   if (minPct === 0) {
     if (rareItems.length === 1) {
@@ -1369,22 +1379,44 @@ function renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremeP
     }
   }
   if (combined > 0) {
-    pills.push(`<div class="s-pill">▸ ${top1.name} + ${top2.name}${igga(top2.name)} <strong>${combined}%</strong> 차지</div>`);
+    pills.push(`<div class="s-pill">▸ ${top1.name} + ${igga(top2.name)} <strong>${combined}%</strong> 차지</div>`);
   }
   pillsEl.innerHTML = pills.join('');
 
-  // 우리 과정 분위기 예측
+  // 우리 과정 분위기 예측 (감성 태그 배너)
   const atmosEl = document.getElementById('st-atmosphere');
   if (atmosEl) {
-    let atmosText = '🔮 우리 과정 분위기 예측 — ';
+    const TYPE_TAG_EMOJIS = [
+      ['💪','🌙','✨','🛡️'],  // 올빼미
+      ['📋','✅','📝','🔍'],  // 햄스터
+      ['🙋','📢','🤝','📈'],  // 수달
+      ['⚡','🎯','🤫','🧩'],  // 치타
+      ['🤝','🎉','🔗','🏆'],  // 돌고래
+    ];
+    let atmosDesc;
     if (top1pct >= 50) {
-      atmosText += `${top1.name}형이 과반수! ${top1.shortDesc || ''} 분위기가 기수 전체에 흐를 것 같아요.`;
+      atmosDesc = `${top1.name}형이 과반수! ${top1.shortDesc || ''} 분위기가 기수 전체에 흐를 것 같아요.`;
     } else if (top1pct === top2pct) {
-      atmosText += `${top1.name}형과 ${top2.name}형이 팽팽하게 맞서는 기수예요. 서로의 스타일이 균형을 이루며 다양한 시너지를 낼 거예요.`;
+      atmosDesc = `${top1.name}형과 ${top2.name}형이 팽팽하게 맞서는 기수예요. 서로의 스타일이 균형을 이루며 다양한 시너지를 낼 거예요.`;
     } else {
-      atmosText += `${top1.name}형과 ${top2.name}형이 중심이 되는 기수예요. 두 유형이 어우러지며 ${label}만의 색깔을 만들어갈 거예요.`;
+      atmosDesc = `${top1.name}형과 ${top2.name}형이 중심이 되는 기수예요. 두 유형이 어우러지며 ${label}만의 색깔을 만들어갈 거예요.`;
     }
-    atmosEl.textContent = atmosText;
+    const idx1 = sorted[0].i, idx2 = sorted[1]?.i ?? sorted[0].i;
+    const tags = [
+      ...TYPES[idx1].traits.slice(0, 2).map((tr, ti) =>
+        `<span class="atmos-tag">${TYPE_TAG_EMOJIS[idx1][ti]} ${tr}</span>`),
+      ...TYPES[idx2].traits.slice(0, 2).map((tr, ti) =>
+        `<span class="atmos-tag">${TYPE_TAG_EMOJIS[idx2][ti]} ${tr}</span>`),
+    ];
+    atmosEl.innerHTML = `
+      <div class="atmos-banner">
+        <div class="atmos-icon">🔮</div>
+        <div class="atmos-body">
+          <div class="atmos-title">우리 과정 분위기 예측</div>
+          <div class="atmos-text">${atmosDesc}</div>
+          <div class="atmos-tags">${tags.join('')}</div>
+        </div>
+      </div>`;
   }
 
   // HOT box inside analysis card
