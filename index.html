@@ -366,7 +366,7 @@
   .t-emoji { font-size:13px; flex-shrink:0; line-height:1; }
   .t-name { font-size:12px; font-weight:700; color:var(--fg); }
   .t-desc { font-size:9px; color:var(--fg-sub); line-height:1.3; }
-  .t-right { width:94px; display:flex; flex-direction:column; align-items:stretch; gap:4px; }
+  .t-right { width:110px; display:flex; flex-direction:column; align-items:stretch; gap:3px; }
   .t-pct { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; text-align:right; }
   .bar-track { height:7px; background:var(--border); border-radius:99px; overflow:hidden; }
   .bar-fill { height:100%; border-radius:99px; }
@@ -376,12 +376,16 @@
   .ki-item b { color:var(--fg); font-weight:700; }
   .ki-item.ki-me { color:var(--accent); }
   .ki-item.ki-me b { color:var(--accent); }
-  .combo-card { background:var(--accent-soft); border-radius:12px; padding:14px 16px; margin-bottom:14px; }
-  .combo-label { font-size:10px; font-weight:700; color:var(--accent); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
-  .combo-types { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
-  .combo-badge { display:flex; align-items:center; gap:5px; background:var(--surface); border-radius:8px; padding:6px 10px; font-size:12px; font-weight:700; color:var(--fg); }
-  .combo-plus { font-size:16px; color:var(--fg-sub); }
-  .combo-desc { font-size:11px; color:var(--fg-sub); line-height:1.7; margin:0; }
+  .combo-card { background:var(--surface2); border-radius:14px; padding:18px 20px; margin-bottom:14px; }
+  .combo-label { font-size:10px; font-weight:700; color:var(--accent); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
+  .combo-top { display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .combo-side { display:flex; flex-direction:column; align-items:center; gap:5px; flex:1; }
+  .combo-side-emoji { font-size:46px; line-height:1; }
+  .combo-side-name { font-family:'Do Hyeon',sans-serif; font-size:14px; color:var(--fg); text-align:center; line-height:1.3; }
+  .combo-side-pct { font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:700; }
+  .combo-divider { display:flex; align-items:center; justify-content:center; padding:0 14px; }
+  .combo-plus { font-size:22px; font-weight:800; color:var(--fg-sub); }
+  .combo-desc { font-size:11px; color:var(--fg-sub); line-height:1.65; padding-top:12px; border-top:1px solid var(--border); margin:0; }
   .stat-pills { margin-bottom:14px; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:10px; font-size:11px; color:var(--fg-sub); line-height:2; }
   .s-pill { display:block; }
   .s-pill strong { color:var(--accent); }
@@ -1346,14 +1350,20 @@ function renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremeP
 
   comboEl.innerHTML = `
     <div class="combo-label">🔥 대표 조합</div>
-    <div style="display:flex;align-items:center;gap:14px;margin-top:4px;">
-      <p class="combo-desc" style="flex:1;margin:0;">${label}의 주력 유형 조합이에요.<br>${top1.name}형, ${top2.name}형이 함께하면 든든한 팀이 될 거예요! 💪</p>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
-        <div class="combo-badge"><span>${top1.emoji}</span><span>${top1.name}</span></div>
-        <span class="combo-plus">+</span>
-        <div class="combo-badge"><span>${top2.emoji}</span><span>${top2.name}</span></div>
+    <div class="combo-top">
+      <div class="combo-side">
+        <div class="combo-side-emoji">${top1.emoji}</div>
+        <div class="combo-side-name">${top1.name}</div>
+        <div class="combo-side-pct" style="color:${top1.color}">${top1pct}%</div>
       </div>
-    </div>`;
+      <div class="combo-divider"><span class="combo-plus">+</span></div>
+      <div class="combo-side">
+        <div class="combo-side-emoji">${top2.emoji}</div>
+        <div class="combo-side-name">${top2.name}</div>
+        <div class="combo-side-pct" style="color:${top2.color}">${top2pct}%</div>
+      </div>
+    </div>
+    <div class="combo-desc">${label}의 주력 유형 조합이에요. ${top1.name}형, ${top2.name}형이 함께하면 든든한 팀이 될 거예요! 💪</div>`;
 
   const pills = [];
   if (count > 0) {
