@@ -351,6 +351,10 @@
   /* 2-column 패널 */
   .st-divider-v { background:var(--border); }
   .st-panel { padding:18px 16px; }
+  .st-panel-right #st-other-kisu { max-height:320px; overflow-y:auto; padding-right:4px; }
+  .st-panel-right #st-other-kisu::-webkit-scrollbar { width:4px; }
+  .st-panel-right #st-other-kisu::-webkit-scrollbar-track { background:transparent; }
+  .st-panel-right #st-other-kisu::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
   @media(max-width:500px){
     .st-panel-right { border-top:1px solid var(--border); }
     .st-divider-v { display:none; }
@@ -402,7 +406,6 @@
   .kisu-row.current .kisu-bar { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
   /* sec-title 아이콘 */
   .sec-emoji { font-size:18px; line-height:1; }
-  /* Hot / Extreme 문항 */
   /* 분위기 배너 */
   .atmos-banner { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; background:var(--surface2); border-radius:12px; padding:14px 16px; }
   .atmos-icon { font-size:30px; flex-shrink:0; line-height:1; padding-top:2px; }
@@ -411,17 +414,6 @@
   .atmos-text { font-size:12px; color:var(--fg); line-height:1.65; margin-bottom:9px; }
   .atmos-tags { display:flex; flex-wrap:wrap; gap:5px; }
   .atmos-tag { font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:var(--accent-soft); color:var(--accent); border:1px solid rgba(123,114,204,.3); }
-  .hot-box { border:1.5px dashed var(--border); border-radius:12px; padding:16px; text-align:center; }
-  .hot-label { font-size:9px; font-weight:700; color:var(--fg-sub); letter-spacing:1.5px; margin-bottom:10px; }
-  .hot-sample { background:var(--bg); border-radius:10px; padding:12px 14px; text-align:left; margin-bottom:8px; }
-  .hot-q { font-size:11px; font-weight:700; margin-bottom:8px; line-height:1.5; }
-  .hot-options { display:flex; gap:6px; }
-  .hot-opt { flex:1; border-radius:8px; padding:8px 10px; font-size:11px; font-weight:700; text-align:center; }
-  .hot-opt-pct { font-family:'IBM Plex Mono',monospace; font-size:13px; display:block; margin-bottom:2px; }
-  .hot-api-note { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--fg-sub); margin-top:4px; }
-  .vs-row { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
-  .vs-tag { font-size:15px; font-weight:800; letter-spacing:-0.3px; }
-  .vs-label { font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700; color:var(--fg-sub); letter-spacing:3px; padding:0 2px; }
   /* Heatmap */
   .hm-scroll { overflow-x:auto; }
   .hm-grid { display:grid; grid-template-columns:auto repeat(5,1fr); gap:3px; min-width:300px; }
@@ -555,7 +547,6 @@
           <select id="inp-course">
             <option value="">과정을 선택해주세요</option>
             <option value="FS">풀스택 엔지니어 (FS)</option>
-            <option value="FESI">프론트엔드 단기심화 (FESI)</option>
             <option value="DA">데이터 분석가 (DA)</option>
             <option value="PD">프로덕트 디자인 (PD)</option>
             <option value="IF">IT 서비스 창업 (IF)</option>
@@ -681,26 +672,6 @@
           <div class="combo-card" id="st-combo-card"></div>
           <div class="stat-pills" id="st-stat-pills"></div>
           <div id="st-atmosphere"></div>
-          <div class="hot-box" id="st-hot-box-analysis" hidden>
-            <div class="hot-label">⚡ 전체 스프린터 — 가장 팽팽하게 갈린 문항</div>
-            <div id="hot-sample-hot-analysis"></div>
-            <div class="hot-label" style="margin-top:14px;">↔ 가장 극명하게 나뉜 문항</div>
-            <div id="hot-sample-extreme-analysis"></div>
-          </div>
-        </div>
-
-        <!-- C: 핫이슈 분석 -->
-        <div class="st-card">
-          <div class="st-sec-title"><span class="st-sec-num">HOT</span>스프린터 설문 핫이슈</div>
-          <div class="hot-box" id="st-hot-box-completed" hidden>
-            <div class="hot-label">⚡ 전체 스프린터 — 가장 팽팽하게 갈린 문항</div>
-            <div id="hot-sample-hot"></div>
-            <div class="hot-label" style="margin-top:14px;">↔ 가장 극명하게 나뉜 문항</div>
-            <div id="hot-sample-extreme"></div>
-            <p class="hot-api-note">* 실제 제출 데이터 기반이에요</p>
-          </div>
-        </div>
-
         <!-- 전체 과정별 유형 분포 히트맵 -->
         <div class="st-card">
           <div class="st-sec-title"><span class="sec-emoji">🗺️</span>전체 과정별 유형 분포</div>
@@ -723,17 +694,6 @@
           </div>
           <div id="nc-legend" style="margin-bottom:18px;"></div>
           <div id="nc-type-rows"></div>
-        </div>
-
-        <!-- 핫이슈 (not-completed) -->
-        <div class="st-card" id="st-hot-nc-card" hidden>
-          <div class="st-sec-title" style="font-size:14px;margin-bottom:16px;"><span class="st-sec-num">HOT</span>스프린터 설문 핫이슈</div>
-          <div class="hot-box" style="border:none;padding:0;text-align:left;">
-            <div class="hot-label">⚡ 가장 팽팽하게 갈린 문항</div>
-            <div id="hot-sample-hot-nc"></div>
-            <div class="hot-label" style="margin-top:14px;">↔ 가장 극명하게 나뉜 문항</div>
-            <div id="hot-sample-extreme-nc"></div>
-          </div>
         </div>
 
         <!-- 전체 과정별 유형 분포 (히트맵) -->
@@ -887,9 +847,9 @@ const TYPES = [
   },
 ];
 
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyMU_oz6F7PVgKs7vJM6mNZ0HZNyM3EerXAu6m5ZV9ZsEqZv3SO7RX3qi530s3-lHFK1w/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbz06DhYk9WBIZyOuASECTU71cNkPNwsWMCcsfrDpWWfvTMxcWlOwmct53OH4B98UCxYBg/exec';
 const COURSE_NAMES = {
-  FS:'풀스택 엔지니어', FESI:'프론트엔드 단기심화', DA:'데이터 분석가',
+  FS:'풀스택 엔지니어', DA:'데이터 분석가',
   PD:'프로덕트 디자인', IF:'IT 서비스 창업', AI:'AI 엔지니어', SB:'Spring 백엔드'
 };
 
@@ -1153,7 +1113,6 @@ function submitResult(t) {
     body: JSON.stringify({
       kisu: userKisu, name: userName, course: userCourse,
       typeEmoji: t.emoji, typeName: t.name,
-      answers: answers.map((a, qi) => a !== null ? QS[qi].opts[a].tp : null),
     })
   })
   .then(() => { el.className = 'sub-status show ok'; el.textContent = '✅ 결과가 시트에 저장됐어요!'; })
@@ -1202,13 +1161,12 @@ function retryStats() { statsLoaded = false; loadStats(); }
 
 const TYPE_RGB = ['155,143,214','232,168,56','80,191,160','224,112,112','107,170,223'];
 const COURSE_NAMES_SHORT = {
-  FS:'풀스택', FESI:'FE심화', DA:'데이터', SB:'스프링', AI:'AI', PD:'프로덕트', IF:'IT창업'
+  FS:'풀스택', DA:'데이터', SB:'스프링', AI:'AI', PD:'프로덕트', IF:'IT창업'
 };
 
 function renderStats(data) {
   const {
     totalCount = 0, totalPct = [], cohorts = [], courses = [],
-    hotIdx = null, hotPcts = [50,50], extremeIdx = null, extremePcts = [50,50],
   } = data;
 
   const emptyState = document.getElementById('st-empty-state');
@@ -1227,8 +1185,7 @@ function renderStats(data) {
     renderMyKisuBars(cohorts, totalPct);
     renderOtherKisu(cohorts);
     renderKisuInsight(cohorts);
-    renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremePcts);
-    renderCompletedHot(hotIdx, hotPcts, extremeIdx, extremePcts);
+    renderAnalysis(cohorts, totalPct);
     renderHeatmap('heatmap', courses);
   } else {
     document.getElementById('view-completed').hidden = true;
@@ -1236,7 +1193,6 @@ function renderStats(data) {
     renderNcDuo(totalPct, totalCount);
     renderDonutNC(totalPct);
     renderNcTypeRows(totalPct);
-    renderNcHot(hotIdx, hotPcts, extremeIdx, extremePcts);
     renderHeatmap('heatmap-nc', courses);
   }
 }
@@ -1328,7 +1284,7 @@ function renderKisuInsight(cohorts) {
 }
 
 /* 기수 ANALYSIS 카드 */
-function renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremePcts) {
+function renderAnalysis(cohorts, totalPct) {
   const card = document.getElementById('st-analysis-card');
   const comboEl = document.getElementById('st-combo-card');
   const pillsEl = document.getElementById('st-stat-pills');
@@ -1429,58 +1385,7 @@ function renderAnalysis(cohorts, totalPct, hotIdx, hotPcts, extremeIdx, extremeP
       </div>`;
   }
 
-  // HOT box inside analysis card
-  const hotBox = document.getElementById('st-hot-box-analysis');
-  if (hotBox) {
-    if (hotIdx === null && extremeIdx === null) { hotBox.hidden = true; }
-    else {
-      hotBox.hidden = false;
-      document.getElementById('hot-sample-hot-analysis').innerHTML = renderHotSample(hotIdx, hotPcts);
-      document.getElementById('hot-sample-extreme-analysis').innerHTML = renderHotSample(extremeIdx, extremePcts);
-    }
-  }
-
   card.hidden = false;
-}
-
-/* 핫이슈 샘플 HTML (공통) */
-function renderHotSample(qIdx, pcts) {
-  if (qIdx === null || qIdx < 0 || qIdx >= ST_QUESTIONS.length) return '';
-  const q = ST_QUESTIONS[qIdx];
-  return `<div class="hot-sample">
-    <div class="hot-q">${q.q}</div>
-    <div class="hot-options">
-      <div class="hot-opt" style="background:${q.bgColors[0]};color:${q.fgColors[0]};">
-        <span class="hot-opt-pct">${pcts[0]}%</span>${q.opts[0]}
-      </div>
-      <div class="hot-opt" style="background:${q.bgColors[1]};color:${q.fgColors[1]};">
-        <span class="hot-opt-pct">${pcts[1]}%</span>${q.opts[1]}
-      </div>
-    </div>
-    <div class="vs-row">
-      <span class="vs-tag" style="color:${q.fgColors[0]};">${q.factions[0]}</span>
-      <span class="vs-label">VS</span>
-      <span class="vs-tag" style="color:${q.fgColors[1]};">${q.factions[1]}</span>
-    </div>
-  </div>`;
-}
-
-/* Completed 뷰 핫이슈 */
-function renderCompletedHot(hotIdx, hotPcts, extremeIdx, extremePcts) {
-  const box = document.getElementById('st-hot-box-completed');
-  if (hotIdx === null && extremeIdx === null) { box.hidden = true; return; }
-  box.hidden = false;
-  document.getElementById('hot-sample-hot').innerHTML = renderHotSample(hotIdx, hotPcts);
-  document.getElementById('hot-sample-extreme').innerHTML = renderHotSample(extremeIdx, extremePcts);
-}
-
-/* Not-completed 뷰 핫이슈 */
-function renderNcHot(hotIdx, hotPcts, extremeIdx, extremePcts) {
-  const card = document.getElementById('st-hot-nc-card');
-  if (hotIdx === null && extremeIdx === null) { card.hidden = true; return; }
-  card.hidden = false;
-  document.getElementById('hot-sample-hot-nc').innerHTML = renderHotSample(hotIdx, hotPcts);
-  document.getElementById('hot-sample-extreme-nc').innerHTML = renderHotSample(extremeIdx, extremePcts);
 }
 
 /* NC 1위 · 희귀 카드 */
@@ -1600,25 +1505,11 @@ function gwawa(str) {
 
 /* 과정별 고정 기수 범위 */
 const COURSE_KISU_RANGE = {
-  AI: [12, 16], PD: [10, 14], DA: [16, 19],
-  IF: [3, 6], SB: [13, 16], FS: [14, 17]
+  AI: [13, 17], PD: [10, 15], DA: [16, 20],
+  IF: [3, 7], SB: [13, 17], FS: [14, 18]
 };
 
-/* ── 문항별 파벌 메타 (stats 화면 HOT/EXTREME 표시용) ── */
-const ST_QUESTIONS = [
-  { q:"수업을 주로 듣는 장소는?",              factions:["혼자파","함께파"],     fgColors:["#E07070","#6BAADF"], bgColors:["rgba(224,112,112,.15)","rgba(107,170,223,.15)"], opts:["혼자만의 공간에서 집중","동기들과 함께"] },
-  { q:"내 Zep 캐릭터 꾸미기 스타일은?",        factions:["실용파","개성파"],     fgColors:["#E8A838","#6BAADF"], bgColors:["rgba(232,168,56,.15)","rgba(107,170,223,.15)"],  opts:["깔끔하고 단정하게","개성 있게 눈에 띄게"] },
-  { q:"강의 들을 때 나는?",                    factions:["혼자집중파","소통파"],  fgColors:["#E8A838","#50BFA0"], bgColors:["rgba(232,168,56,.15)","rgba(80,191,160,.15)"],   opts:["꼼꼼히 필기하며 정리","핵심 파악하며 빠르게"] },
-  { q:"과제 시작 시기는?",                     factions:["혼자시작파","함께파"],  fgColors:["#9B8FD6","#E8A838"], bgColors:["rgba(155,143,214,.15)","rgba(232,168,56,.15)"],  opts:["마감 직전, 집중력 폭발","강의 끝나자마자 바로"] },
-  { q:"모르는 개념 나왔을 때 나는?",            factions:["혼자파","질문파"],     fgColors:["#E07070","#50BFA0"], bgColors:["rgba(224,112,112,.15)","rgba(80,191,160,.15)"],  opts:["혼자 검색해서 해결","디스코드·동기에게 질문"] },
-  { q:"디스코드에서 나는?",                    factions:["조용파","활발파"],     fgColors:["#9B8FD6","#50BFA0"], bgColors:["rgba(155,143,214,.15)","rgba(80,191,160,.15)"],  opts:["필요한 정보만 조용히","질문·답변·모집 활발하게"] },
-  { q:"팀 프로젝트에서 내 자연스러운 역할은?",  factions:["실행파","서포터파"],   fgColors:["#E07070","#6BAADF"], bgColors:["rgba(224,112,112,.15)","rgba(107,170,223,.15)"], opts:["실행·속도 중심 (실행가·선봉장)","조율·기록·지원 중심"] },
-  { q:"과제 완성 기준은?",                     factions:["자기기준파","외부기준파"], fgColors:["#E8A838","#E07070"], bgColors:["rgba(232,168,56,.15)","rgba(224,112,112,.15)"],  opts:["요구사항 100%, 마무리까지","기능 돌아가면 일단 제출"] },
-  { q:"번아웃 올 것 같을 때 나는?",            factions:["혼자극복파","공감파"],  fgColors:["#E07070","#50BFA0"], bgColors:["rgba(224,112,112,.15)","rgba(80,191,160,.15)"],  opts:["혼자 다잡고 극복","디코에 털어놓고 공감받아 회복"] },
-  { q:"스프린트 수료 후 내 목표는?",            factions:["독립파","협업파"],     fgColors:["#E07070","#6BAADF"], bgColors:["rgba(224,112,112,.15)","rgba(107,170,223,.15)"], opts:["빠른 취업·독립적 성장","동기들과 협업·창업 도전"] },
-];
-
 /* 과정별 고정 순서 */
-const COURSE_ORDER = ['FS', 'FESI', 'DA', 'SB', 'AI', 'PD', 'IF'];
+const COURSE_ORDER = ['FS', 'DA', 'SB', 'AI', 'PD', 'IF'];
 
 </script>
