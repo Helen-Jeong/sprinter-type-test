@@ -693,7 +693,6 @@
           <div style="display:flex;justify-content:center;margin-bottom:18px;">
             <svg id="donut-nc-svg" width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0;"></svg>
           </div>
-          <div id="nc-legend" style="margin-bottom:18px;"></div>
           <div id="nc-type-rows"></div>
         </div>
 
@@ -1429,14 +1428,6 @@ function renderDonutNC(totalPct) {
     const x2=cx+r*Math.cos(ang-0.001), y2=cy+r*Math.sin(ang-0.001);
     return `<path d="M${x1} ${y1} A${r} ${r} 0 ${p>50?1:0} 1 ${x2} ${y2}" fill="none" stroke="${TYPES[i].color}" stroke-width="${stroke}" stroke-linecap="butt"/>`;
   }).join('') + `<circle cx="${cx}" cy="${cy}" r="${r-stroke/2}" fill="var(--surface)"/>`;
-  const leg = document.getElementById('nc-legend');
-  if (leg) leg.innerHTML = TYPES.map((t,i) => `
-    <div class="legend-row">
-      <div class="l-dot" style="background:${t.color}"></div>
-      <span class="l-emoji">${t.emoji}</span>
-      <span class="l-name">${t.name}</span>
-      <span class="l-pct" style="color:${t.color}">${totalPct[i]}%</span>
-    </div>`).join('');
 }
 
 /* NC 타입 행 */
