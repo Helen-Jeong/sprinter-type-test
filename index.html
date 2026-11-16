@@ -1299,7 +1299,7 @@ function renderAnalysis(cohorts, totalPct) {
   if (titleEl) titleEl.textContent = label + ' 기수 분석';
 
   const sorted = pct.map((p,i) => ({p,i})).sort((a,b) => b.p-a.p);
-  const hasSecond = sorted.length > 1 && sorted[1].p > 0;
+  const hasSecond = sorted.length > 1 && sorted[1].p >= 1;
   const top1 = TYPES[sorted[0].i], top2 = hasSecond ? TYPES[sorted[1].i] : null;
   const top1pct = sorted[0].p, top2pct = hasSecond ? sorted[1].p : 0;
   const combined = top1pct + top2pct;
@@ -1371,19 +1371,21 @@ function renderAnalysis(cohorts, totalPct) {
       ['🤝','🎉','🔗','🏆'],  // 돌고래
     ];
     let atmosDesc;
-    if (top1pct >= 50) {
+    if (!hasSecond || top1pct >= 100) {
+      atmosDesc = `${top1.name}형 100%! ${top1.shortDesc || top1.name + '형만의 에너지'} 가득한 기수예요. 🎯`;
+    } else if (top1pct >= 50) {
       atmosDesc = `${top1.name}형이 과반수! ${top1.shortDesc || ''} 분위기가 기수 전체에 흐를 것 같아요.`;
     } else if (top1pct === top2pct) {
       atmosDesc = `${top1.name}형과 ${top2.name}형이 팽팽하게 맞서는 기수예요. 서로의 스타일이 균형을 이루며 다양한 시너지를 낼 거예요.`;
     } else {
       atmosDesc = `${top1.name}형과 ${top2.name}형이 중심이 되는 기수예요. 두 유형이 어우러지며 ${label}만의 색깔을 만들어갈 거예요.`;
     }
-    const idx1 = sorted[0].i, idx2 = sorted[1]?.i ?? sorted[0].i;
+    const idx1 = sorted[0].i, idx2 = hasSecond ? sorted[1].i : null;
     const tags = [
-      ...TYPES[idx1].traits.slice(0, 2).map((tr, ti) =>
+      ...TYPES[idx1].traits.slice(0, idx2 !== null ? 2 : 4).map(tr =>
         `<span class="atmos-tag">#${tr.replace(/ /g,'')}</span>`),
-      ...TYPES[idx2].traits.slice(0, 2).map((tr, ti) =>
-        `<span class="atmos-tag">#${tr.replace(/ /g,'')}</span>`),
+      ...(idx2 !== null ? TYPES[idx2].traits.slice(0, 2).map(tr =>
+        `<span class="atmos-tag">#${tr.replace(/ /g,'')}</span>`) : []),
     ];
     atmosEl.innerHTML = `
       <div class="atmos-banner">
