@@ -965,7 +965,7 @@ function goBackFromStats() { if (statsFrom === 'result') show('sc-result'); else
 function routeFromHash() {
   const hash = location.hash;
   const allOff = () => document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  if      (hash === '#stats')              { allOff(); document.getElementById('sc-stats').classList.add('active'); }
+  if      (hash === '#stats')              { allOff(); document.getElementById('sc-stats').classList.add('active'); if (!statsLoaded) loadStats(); }
   else if (hash === '#form')               { allOff(); document.getElementById('sc-form').classList.add('active'); }
   else if (hash === '#test' || hash === '#result') { allOff(); document.getElementById('sc-form').classList.add('active'); }
   else                                     { allOff(); document.getElementById('sc-intro').classList.add('active'); }
