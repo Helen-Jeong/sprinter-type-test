@@ -400,10 +400,11 @@
   .kisu-num { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; color:var(--fg-sub); }
   .kisu-count { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--fg-sub); }
   .now-badge { font-size:9px; background:var(--accent-soft); color:var(--accent); border-radius:99px; padding:1px 7px; font-weight:700; }
-  .kisu-bar { display:flex; height:10px; border-radius:6px; overflow:hidden; gap:1px; }
+  .kisu-bar { display:flex; height:10px; gap:1px; }
   .kisu-seg { flex-shrink:0; }
   .kisu-row.current .kisu-num { color:var(--accent); }
-  .kisu-row.current .kisu-bar { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
+  .kisu-row.current .kisu-bar-wrap { outline:2px solid var(--accent); outline-offset:2px; border-radius:8px; }
+  .kisu-bar-wrap { border-radius:6px; overflow:hidden; }
   /* sec-title 아이콘 */
   .sec-emoji { font-size:18px; line-height:1; }
   /* 분위기 배너 */
@@ -1253,10 +1254,12 @@ function renderOtherKisu(cohorts) {
         ${isMe ? '<span class="now-badge">내 기수</span>' : ''}
         <span class="kisu-count" style="margin-left:auto">${c.count}명</span>
       </div>
-      <div class="kisu-bar">
-        ${TYPES.map((t,i) => c.pct[i]>0
-          ? `<div class="kisu-seg" style="flex:${c.pct[i]};background:${t.color}${isMe?'':'CC'}"></div>`
-          : '').join('')}
+      <div class="kisu-bar-wrap">
+        <div class="kisu-bar">
+          ${TYPES.map((t,i) => c.pct[i]>0
+            ? `<div class="kisu-seg" style="flex:${c.pct[i]};background:${t.color}${isMe?'':'CC'}"></div>`
+            : '').join('')}
+        </div>
       </div>
     </div>`;
   }).join('');
