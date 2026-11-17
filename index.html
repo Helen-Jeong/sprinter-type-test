@@ -1178,7 +1178,7 @@ async function loadStats() {
         const globalData = await globalRes.json();
         if (!globalData.error) {
           renderStats(globalData);
-          // 글로벌 폴백: cohort는 과정 무관 기수 합산이므로 기수 섹션만 첫 스프린터 UI로 덮어씀
+          // 글로벌 폴백: 내 기수 바만 첫 스프린터 UI로 덮어씀 (다른 기수 그래프는 유지)
           document.getElementById('st-my-kisu-title').innerHTML =
             (COURSE_NAMES[userCourse] || userCourse) + ' ' + userKisu + '기';
           document.getElementById('st-kisu-bars').innerHTML =
@@ -1187,8 +1187,6 @@ async function loadStats() {
               <div style="font-size:13px;font-weight:700;color:var(--fg);margin-bottom:6px">우리 기수 첫 번째 스프린터예요!</div>
               <div style="font-size:11px;color:var(--fg-sub);line-height:1.85">동기들이 참여하면<br>여기서 유형 분포를 확인할 수 있어요.<br>잠시 후 다시 확인해보세요 🙂</div>
             </div>`;
-          document.getElementById('st-other-kisu').innerHTML =
-            '<div class="st-cohort-empty">아직 기수 데이터가 없어요 🐾</div>';
           document.getElementById('st-kisu-insight').innerHTML = '';
           document.getElementById('st-analysis-card').hidden = true;
           loadEl.hidden = true; content.hidden = false;
