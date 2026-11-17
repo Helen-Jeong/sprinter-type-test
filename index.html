@@ -1166,7 +1166,8 @@ async function loadStats() {
       (userCourse ? '&course=' + encodeURIComponent(userCourse) : '');
     const res  = await fetchWithTimeout(url, { redirect: 'follow' });
     const data = await res.json();
-    if (data.error) throw new Error(data.error);
+    // totalCount > 0이면 내 기수만 없는 것 — 데이터 활용 (renderMyKisuBars가 첫 스프린터 처리)
+    if (data.error && !data.totalCount) throw new Error(data.error);
     renderStats(data);
     loadEl.hidden = true; content.hidden = false;
     statsLoaded = true;
