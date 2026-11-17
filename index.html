@@ -1099,7 +1099,7 @@ function renderResultScreen(t, doSubmit) {
   document.getElementById('res-compat-line').innerHTML =
     `<strong>${t.compatIcon} ${compatName}</strong>${compatDesc ? ' — ' + compatDesc : ''}`;
   document.getElementById('share-text').textContent =
-    `⚡ **코드잇 스프린터 유형 테스트 결과** ⚡\n${courseFull} ${userKisu}기 **${userName}**\n\n나는 ${t.emoji} **${t.name}**!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} **${compatName}**${compatDesc ? '\n→ ' + compatDesc : ''}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 / 커뮤니티 서버 #💬소통_할까요\n#코드잇스프린트 #스프린터유형테스트`;
+    `⚡ **코드잇 스프린터 유형 테스트 결과** ⚡\n${courseFull} ${userKisu}기 **${userName}**\n\n나는 ${t.emoji} **${t.name}**!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} **${compatName}**${compatDesc ? '\n→ ' + compatDesc : ''}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 / 커뮤니티 서버 #💬소통_할까요`;
   const statusEl = document.getElementById('sub-status');
   if (!doSubmit) {
     statusEl.className = 'sub-status show ok';
