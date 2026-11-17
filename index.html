@@ -408,7 +408,6 @@
   .kisu-bar { display:flex; height:10px; gap:1px; }
   .kisu-seg { flex-shrink:0; }
   .kisu-row.current .kisu-num { color:var(--accent); }
-  .kisu-row.current .kisu-bar-wrap { padding:3px; margin:-3px; border-radius:9px; border:2px solid var(--accent); }
   .kisu-bar-wrap { border-radius:6px; overflow:hidden; }
   /* sec-title 아이콘 */
   .sec-emoji { font-size:18px; line-height:1; }
@@ -613,7 +612,7 @@
       <div class="res-dark-content"><p class="res-compat-line" id="res-compat-line"></p></div>
     </div>
     <div id="sub-status" class="sub-status"></div>
-    <p class="share-notice">👇 아래 버튼으로 결과를 복사해서<br><span class="notag">#소통_할까요</span> 채널이나 팀원들과 공유해봐요!</p>
+    <p class="share-notice">👇 결과를 복사해서 공유해봐요!<br>기수 서버 <span class="notag">#💬소통-할까요</span> 또는 커뮤니티 서버 <span class="notag">#💬소통_할까요</span></p>
     <div class="share-box">
       <p class="sec-label">// 📤 SHARE</p>
       <div class="share-text" id="share-text"></div>
@@ -1099,7 +1098,7 @@ function renderResultScreen(t, doSubmit) {
   document.getElementById('res-compat-line').innerHTML =
     `<strong>${t.compatIcon} ${compatName}</strong>${compatDesc ? ' — ' + compatDesc : ''}`;
   document.getElementById('share-text').textContent =
-    `⚡ 코드잇 스프린터 유형 테스트 결과 ⚡\n${courseFull} ${userKisu}기 ${userName}\n\n나는 ${t.emoji} ${t.name}!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} ${t.compatText}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n#코드잇스프린트 #스프린터유형테스트`;
+    `⚡ 코드잇 스프린터 유형 테스트 결과 ⚡\n${courseFull} ${userKisu}기 ${userName}\n\n나는 ${t.emoji} ${t.name}!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} ${t.compatText}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 / 커뮤니티 서버 #💬소통_할까요\n#코드잇스프린트 #스프린터유형테스트`;
   const statusEl = document.getElementById('sub-status');
   if (!doSubmit) {
     statusEl.className = 'sub-status show ok';
@@ -1213,12 +1212,19 @@ function renderMyKisuBars(cohorts, totalPct) {
   const el = document.getElementById('st-kisu-bars');
   const titleEl = document.getElementById('st-my-kisu-title');
   const myCohort = cohorts.find(c => String(c.kisu) === String(userKisu));
-  const pct = myCohort ? myCohort.pct : totalPct;
-  if (myCohort) {
-    titleEl.innerHTML = (COURSE_NAMES[userCourse] || userCourse) + ',<br>우리 ' + userKisu + '기의 분포';
-  } else {
-    titleEl.innerHTML = '전체 스프린터<br>유형 분포';
+
+  if (!myCohort) {
+    titleEl.innerHTML = (COURSE_NAMES[userCourse] || userCourse) + ' ' + userKisu + '기';
+    el.innerHTML = `<div style="text-align:center;padding:20px 4px 12px">
+      <div style="font-size:32px;margin-bottom:10px">🌱</div>
+      <div style="font-size:13px;font-weight:700;color:var(--fg);margin-bottom:6px">우리 기수 첫 번째 스프린터예요!</div>
+      <div style="font-size:11px;color:var(--fg-sub);line-height:1.85">동기들이 참여하면<br>여기서 유형 분포를 확인할 수 있어요.<br>잠시 후 다시 확인해보세요 🙂</div>
+    </div>`;
+    return;
   }
+
+  titleEl.innerHTML = (COURSE_NAMES[userCourse] || userCourse) + ',<br>우리 ' + userKisu + '기의 분포';
+  const pct = myCohort.pct;
   const maxPct = Math.max(...pct);
   el.innerHTML = TYPES.map((t, i) => {
     const prop = maxPct > 0 ? Math.round((pct[i] / maxPct) * 100) : 0;
