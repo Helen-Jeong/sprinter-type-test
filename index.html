@@ -1036,6 +1036,7 @@ function closeModalGoResult() {
   const t = TYPES.find(t => t.name === prevResultData.typeName);
   if (!t) { startQuizActual(); return; }
   testCompleted = true;
+  statsLoaded = false; // 이전 결과 보기 시 통계 재로딩 강제
   renderResultScreen(t, false);
 }
 
@@ -1207,7 +1208,7 @@ function retryStats() { statsLoaded = false; loadStats(); }
 
 const TYPE_RGB = ['155,143,214','232,168,56','80,191,160','224,112,112','107,170,223'];
 const COURSE_NAMES_SHORT = {
-  FS:'풀스택', DA:'데이터', SB:'스프링', AI:'AI', PD:'프로덕트', IF:'IT창업'
+  FS:'FS', DA:'DA', SB:'SB', AI:'AI', PD:'PD', IF:'IF'
 };
 
 function renderStats(data) {
