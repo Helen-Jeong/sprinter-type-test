@@ -1,4 +1,9 @@
 <title>코드잇 스프린터 유형 테스트</title>
+<meta property="og:title" content="나는 어떤 스프린터일까? 🐆🦉🐬🦦🐹">
+<meta property="og:description" content="과정도 기수도 달라도, 우리는 모두 스프린터. 10개 질문으로 내 유형을 확인해보세요!">
+<meta property="og:image" content="https://helen-jeong.github.io/sprinter-type-test/og-image.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡️</text></svg>">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;700&display=swap">
 <style>
@@ -556,11 +561,16 @@
       </div>
       <div class="field">
         <label for="inp-kisu">기수 // COHORT</label>
-        <input type="number" id="inp-kisu" placeholder="예) 17" min="1" max="99">
+        <div class="select-wrap">
+          <select id="inp-kisu" disabled>
+            <option value="">과정을 먼저 선택해주세요</option>
+          </select>
+        </div>
       </div>
       <div class="field">
         <label for="inp-name">이름 // NAME</label>
         <input type="text" id="inp-name" placeholder="이름을 입력해주세요">
+        <p style="font-size:11px;color:var(--fg-sub);margin-top:7px;line-height:1.6;">본 테스트는 결과 재조회 및 중복 참여 방지를 위해 이름을 수집하며, 그 외 다른 용도로 사용되지 않습니다.<br>수집된 정보는 2026년 12월 18일(금) 이후 전량 삭제되며, 테스트 시작 시 이에 동의한 것으로 간주됩니다.</p>
       </div>
       <p class="err-msg" id="err-msg">과정, 기수, 이름을 모두 입력해주세요!</p>
       <button class="btn-primary" id="btn-start" onclick="startQuiz()">테스트 시작하기 →</button>
@@ -952,7 +962,9 @@ function goToFormInput() {
 }
 
 function goIntro() {
-  document.getElementById('inp-kisu').value = '';
+  const kisuSel = document.getElementById('inp-kisu');
+  kisuSel.innerHTML = '<option value="">과정을 먼저 선택해주세요</option>';
+  kisuSel.disabled = true;
   document.getElementById('inp-name').value = '';
   document.getElementById('inp-course').value = '';
   prevResultData = null;
@@ -1087,7 +1099,7 @@ function renderResultScreen(t, doSubmit) {
   document.getElementById('res-compat-line').innerHTML =
     `<strong>${t.compatIcon} ${compatName}</strong>${compatDesc ? ' — ' + compatDesc : ''}`;
   document.getElementById('share-text').textContent =
-    `⚡ 코드잇 스프린터 유형 테스트 결과 ⚡\n${courseFull} ${userKisu}기 ${userName}\n\n나는 ${t.emoji} ${t.name}!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} ${t.compatText}\n\n#코드잇스프린트 #스프린터유형테스트`;
+    `⚡ 코드잇 스프린터 유형 테스트 결과 ⚡\n${courseFull} ${userKisu}기 ${userName}\n\n나는 ${t.emoji} ${t.name}!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} ${t.compatText}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n#코드잇스프린트 #스프린터유형테스트`;
   const statusEl = document.getElementById('sub-status');
   if (!doSubmit) {
     statusEl.className = 'sub-status show ok';
@@ -1504,6 +1516,24 @@ function gwawa(str) {
   if (code < 0xAC00 || code > 0xD7A3) return str + '과(와)';
   return (code - 0xAC00) % 28 !== 0 ? str + '과' : str + '와';
 }
+
+/* 과정 선택 시 기수 드롭다운 채우기 */
+document.getElementById('inp-course').addEventListener('change', function() {
+  const sel = document.getElementById('inp-kisu');
+  const course = this.value;
+  if (!course || !COURSE_KISU_RANGE[course]) {
+    sel.innerHTML = '<option value="">과정을 먼저 선택해주세요</option>';
+    sel.disabled = true;
+    return;
+  }
+  const [min, max] = COURSE_KISU_RANGE[course];
+  let opts = '<option value="">기수를 선택해주세요</option>';
+  for (let k = max; k >= min; k--) {
+    opts += `<option value="${k}">${k}기</option>`;
+  }
+  sel.innerHTML = opts;
+  sel.disabled = false;
+});
 
 /* 과정별 고정 기수 범위 */
 const COURSE_KISU_RANGE = {
