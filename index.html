@@ -1148,6 +1148,13 @@ let testCompleted = false;
 let resultSubmitted = false;
 let statsFrom = 'form';
 
+function fetchWithTimeout(url, options, ms = 15000) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...options, signal: ctrl.signal })
+    .finally(() => clearTimeout(tid));
+}
+
 async function loadStats() {
   const loadEl  = document.getElementById('st-loading');
   const errEl   = document.getElementById('st-error');
@@ -1157,7 +1164,7 @@ async function loadStats() {
   try {
     const url = WEBHOOK_URL + '?action=stats' +
       (userCourse ? '&course=' + encodeURIComponent(userCourse) : '');
-    const res  = await fetch(url, { redirect: 'follow' });
+    const res  = await fetchWithTimeout(url, { redirect: 'follow' });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     renderStats(data);
@@ -1167,10 +1174,23 @@ async function loadStats() {
     if (testCompleted) {
       // 내 과정/기수 첫 스프린터 — 과정 필터 없이 글로벌 통계로 fallback
       try {
-        const globalRes = await fetch(WEBHOOK_URL + '?action=stats', { redirect: 'follow' });
+        const globalRes = await fetchWithTimeout(WEBHOOK_URL + '?action=stats', { redirect: 'follow' });
         const globalData = await globalRes.json();
         if (!globalData.error) {
           renderStats(globalData);
+          // 글로벌 폴백: cohort는 과정 무관 기수 합산이므로 기수 섹션만 첫 스프린터 UI로 덮어씀
+          document.getElementById('st-my-kisu-title').innerHTML =
+            (COURSE_NAMES[userCourse] || userCourse) + ' ' + userKisu + '기';
+          document.getElementById('st-kisu-bars').innerHTML =
+            `<div style="text-align:center;padding:20px 4px 12px">
+              <div style="font-size:32px;margin-bottom:10px">🌱</div>
+              <div style="font-size:13px;font-weight:700;color:var(--fg);margin-bottom:6px">우리 기수 첫 번째 스프린터예요!</div>
+              <div style="font-size:11px;color:var(--fg-sub);line-height:1.85">동기들이 참여하면<br>여기서 유형 분포를 확인할 수 있어요.<br>잠시 후 다시 확인해보세요 🙂</div>
+            </div>`;
+          document.getElementById('st-other-kisu').innerHTML =
+            '<div class="st-cohort-empty">아직 기수 데이터가 없어요 🐾</div>';
+          document.getElementById('st-kisu-insight').innerHTML = '';
+          document.getElementById('st-analysis-card').hidden = true;
           loadEl.hidden = true; content.hidden = false;
           statsLoaded = true;
           return;
@@ -1208,7 +1228,7 @@ function retryStats() { statsLoaded = false; loadStats(); }
 
 const TYPE_RGB = ['155,143,214','232,168,56','80,191,160','224,112,112','107,170,223'];
 const COURSE_NAMES_SHORT = {
-  FS:'FS', DA:'DA', SB:'SB', AI:'AI', PD:'PD', IF:'IF'
+  FS:'풀스택', DA:'데이터', SB:'스프링', AI:'AI', PD:'프로덕트', IF:'IT창업'
 };
 
 function renderStats(data) {
