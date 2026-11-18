@@ -545,7 +545,7 @@
 
     <div class="card">
       <div class="field">
-        <label for="inp-course">과정 // TRACK</label>
+        <label for="inp-course">과정 | TRACK</label>
         <div class="select-wrap">
           <select id="inp-course">
             <option value="">과정을 선택해주세요</option>
@@ -559,7 +559,7 @@
         </div>
       </div>
       <div class="field">
-        <label for="inp-kisu">기수 // COHORT</label>
+        <label for="inp-kisu">기수 | COHORT</label>
         <div class="select-wrap">
           <select id="inp-kisu" disabled>
             <option value="">과정을 먼저 선택해주세요</option>
@@ -567,7 +567,7 @@
         </div>
       </div>
       <div class="field">
-        <label for="inp-name">이름 // NAME</label>
+        <label for="inp-name">이름 | NAME</label>
         <input type="text" id="inp-name" placeholder="이름을 입력해주세요">
         <p style="font-size:11px;color:var(--fg-sub);margin-top:7px;line-height:1.6;">본 테스트는 결과 재조회 및 중복 참여 방지를 위해 이름을 수집하며, 그 외 다른 용도로 사용되지 않습니다.<br>수집된 정보는 2026년 12월 18일(금) 이후 전량 삭제되며, 테스트 시작 시 이에 동의한 것으로 간주됩니다.</p>
       </div>
@@ -581,7 +581,7 @@
   <div id="sc-quiz" class="screen">
     <div class="prog-area">
       <div class="prog-meta">
-        <span class="prog-label">// 진행도</span>
+        <span class="prog-label">진행도</span>
         <span class="prog-count" id="prog-count">1 / 10</span>
       </div>
       <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
@@ -603,18 +603,18 @@
       <span class="res-chip" id="res-chip"></span>
     </div>
     <div class="res-card">
-      <p class="sec-label">// 🔎 DESCRIPTION</p>
+      <p class="sec-label">🔎 DESCRIPTION</p>
       <p class="res-desc" id="res-desc"></p>
       <p class="res-tags" id="res-traits"></p>
     </div>
     <div class="res-card res-card-dark">
-      <p class="res-dark-header">// 💞 BEST MATCH</p>
+      <p class="res-dark-header">💞 BEST MATCH</p>
       <div class="res-dark-content"><p class="res-compat-line" id="res-compat-line"></p></div>
     </div>
     <div id="sub-status" class="sub-status"></div>
     <p class="share-notice">👇 결과를 복사해서 공유해봐요!<br>기수 서버 <span class="notag">#💬소통-할까요</span> 또는 커뮤니티 서버 <span class="notag">#💬소통_할까요</span> 채널을 활용해봐요!</p>
     <div class="share-box">
-      <p class="sec-label">// 📤 SHARE</p>
+      <p class="sec-label">📤 SHARE</p>
       <div class="share-text" id="share-text"></div>
       <button class="btn-copy" id="btn-copy" onclick="copyResult()">📋 결과 복사하기</button>
     </div>
@@ -1099,7 +1099,7 @@ function renderResultScreen(t, doSubmit) {
   document.getElementById('res-compat-line').innerHTML =
     `<strong>${t.compatIcon} ${compatName}</strong>${compatDesc ? ' — ' + compatDesc : ''}`;
   document.getElementById('share-text').textContent =
-    `⚡ **코드잇 스프린터 유형 테스트 결과** ⚡\n${courseFull} ${userKisu}기 **${userName}**\n\n나는 ${t.emoji} **${t.name}**!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} **${compatName}**${compatDesc ? '\n→ ' + compatDesc : ''}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 / 커뮤니티 서버 #💬소통_할까요 채널을 통해 공유해 주세요 🙌🏻`;
+    `⚡ **코드잇 스프린터 유형 테스트 결과** ⚡\n${courseFull} ${userKisu}기 **${userName}**\n\n나는 ${t.emoji} **${t.name}**!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} **${compatName}**${compatDesc ? '\n→ ' + compatDesc : ''}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 또는 커뮤니티 서버 #💬소통_할까요 채널을 활용해봐요!\n#코드잇스프린트 #스프린터유형테스트`;
   const statusEl = document.getElementById('sub-status');
   if (!doSubmit) {
     statusEl.className = 'sub-status show ok';
@@ -1173,34 +1173,16 @@ async function loadStats() {
     statsLoaded = true;
   } catch(e) {
     if (testCompleted) {
-      // 내 과정/기수 첫 스프린터 — 과정 필터 없이 글로벌 통계로 fallback
-      try {
-        const globalRes = await fetchWithTimeout(WEBHOOK_URL + '?action=stats', { redirect: 'follow' });
-        const globalData = await globalRes.json();
-        if (!globalData.error) {
-          renderStats(globalData);
-          // 글로벌 폴백: 내 기수 바만 첫 스프린터 UI로 덮어씀 (다른 기수 그래프는 유지)
-          document.getElementById('st-my-kisu-title').innerHTML =
-            (COURSE_NAMES[userCourse] || userCourse) + ' ' + userKisu + '기';
-          document.getElementById('st-kisu-bars').innerHTML =
-            `<div style="text-align:center;padding:20px 4px 12px">
-              <div style="font-size:32px;margin-bottom:10px">🌱</div>
-              <div style="font-size:13px;font-weight:700;color:var(--fg);margin-bottom:6px">우리 기수 첫 번째 스프린터예요!</div>
-              <div style="font-size:11px;color:var(--fg-sub);line-height:1.85">동기들이 참여하면<br>여기서 유형 분포를 확인할 수 있어요.<br>잠시 후 다시 확인해보세요 🙂</div>
-            </div>`;
-          document.getElementById('st-kisu-insight').innerHTML = '';
-          document.getElementById('st-analysis-card').hidden = true;
-          loadEl.hidden = true; content.hidden = false;
-          statsLoaded = true;
-          return;
-        }
-      } catch(e2) {}
-      // 글로벌 통계도 실패 — 첫 스프린터 전용 UI
+      // 내 과정/기수 첫 스프린터 — 왼쪽: 첫 스프린터 UI, 오른쪽: 기수 범위 슬롯 표시
       loadEl.hidden = true; content.hidden = false;
       document.getElementById('st-empty-state').hidden = true;
       document.getElementById('view-completed').hidden = false;
       document.getElementById('view-not-completed').hidden = true;
-      renderFirstSprinterOnly();
+      renderMyKisuBars([], []);
+      renderOtherKisu([]);
+      document.getElementById('st-kisu-insight').innerHTML = '';
+      document.getElementById('st-analysis-card').hidden = true;
+      document.getElementById('heatmap').innerHTML = '';
       statsLoaded = true;
     } else {
       loadEl.hidden = true; errEl.hidden = false;
@@ -1227,7 +1209,7 @@ function retryStats() { statsLoaded = false; loadStats(); }
 
 const TYPE_RGB = ['155,143,214','232,168,56','80,191,160','224,112,112','107,170,223'];
 const COURSE_NAMES_SHORT = {
-  FS:'풀스택', DA:'데이터', SB:'스프링', AI:'AI', PD:'프로덕트', IF:'IT창업'
+  FS:'FS', DA:'DA', SB:'SB', AI:'AI', PD:'PD', IF:'IF'
 };
 
 function renderStats(data) {
