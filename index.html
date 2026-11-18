@@ -545,7 +545,7 @@
 
     <div class="card">
       <div class="field">
-        <label for="inp-course">과정 // TRACK</label>
+        <label for="inp-course">과정 | TRACK</label>
         <div class="select-wrap">
           <select id="inp-course">
             <option value="">과정을 선택해주세요</option>
@@ -559,7 +559,7 @@
         </div>
       </div>
       <div class="field">
-        <label for="inp-kisu">기수 // COHORT</label>
+        <label for="inp-kisu">기수 | COHORT</label>
         <div class="select-wrap">
           <select id="inp-kisu" disabled>
             <option value="">과정을 먼저 선택해주세요</option>
@@ -567,7 +567,7 @@
         </div>
       </div>
       <div class="field">
-        <label for="inp-name">이름 // NAME</label>
+        <label for="inp-name">이름 | NAME</label>
         <input type="text" id="inp-name" placeholder="이름을 입력해주세요">
         <p style="font-size:11px;color:var(--fg-sub);margin-top:7px;line-height:1.6;">본 테스트는 결과 재조회 및 중복 참여 방지를 위해 이름을 수집하며, 그 외 다른 용도로 사용되지 않습니다.<br>수집된 정보는 2026년 12월 18일(금) 이후 전량 삭제되며, 테스트 시작 시 이에 동의한 것으로 간주됩니다.</p>
       </div>
@@ -603,18 +603,18 @@
       <span class="res-chip" id="res-chip"></span>
     </div>
     <div class="res-card">
-      <p class="sec-label">// 🔎 DESCRIPTION</p>
+      <p class="sec-label">🔎 DESCRIPTION</p>
       <p class="res-desc" id="res-desc"></p>
       <p class="res-tags" id="res-traits"></p>
     </div>
     <div class="res-card res-card-dark">
-      <p class="res-dark-header">// 💞 BEST MATCH</p>
+      <p class="res-dark-header">💞 BEST MATCH</p>
       <div class="res-dark-content"><p class="res-compat-line" id="res-compat-line"></p></div>
     </div>
     <div id="sub-status" class="sub-status"></div>
     <p class="share-notice">👇 결과를 복사해서 공유해봐요!<br>기수 서버 <span class="notag">#💬소통-할까요</span> 또는 커뮤니티 서버 <span class="notag">#💬소통_할까요</span> 채널을 활용해봐요!</p>
     <div class="share-box">
-      <p class="sec-label">// 📤 SHARE</p>
+      <p class="sec-label">📤 SHARE</p>
       <div class="share-text" id="share-text"></div>
       <button class="btn-copy" id="btn-copy" onclick="copyResult()">📋 결과 복사하기</button>
     </div>
@@ -1173,16 +1173,12 @@ async function loadStats() {
     statsLoaded = true;
   } catch(e) {
     if (testCompleted) {
-      // 내 과정/기수 첫 스프린터 — 왼쪽: 첫 스프린터 UI, 오른쪽: 기수 범위 슬롯 표시
+      // 내 과정/기수 첫 스프린터 — 첫 스프린터 전용 UI 표시
       loadEl.hidden = true; content.hidden = false;
       document.getElementById('st-empty-state').hidden = true;
       document.getElementById('view-completed').hidden = false;
       document.getElementById('view-not-completed').hidden = true;
-      renderMyKisuBars([], []);
-      renderOtherKisu([]);
-      document.getElementById('st-kisu-insight').innerHTML = '';
-      document.getElementById('st-analysis-card').hidden = true;
-      document.getElementById('heatmap').innerHTML = '';
+      renderFirstSprinterOnly();
       statsLoaded = true;
     } else {
       loadEl.hidden = true; errEl.hidden = false;
@@ -1199,7 +1195,7 @@ function renderFirstSprinterOnly() {
     <div style="font-size:13px;font-weight:700;color:var(--fg);margin-bottom:6px">우리 기수 첫 번째 스프린터예요!</div>
     <div style="font-size:11px;color:var(--fg-sub);line-height:1.85">동기들이 참여하면<br>여기서 유형 분포를 확인할 수 있어요.<br>잠시 후 다시 확인해보세요 🙂</div>
   </div>`;
-  document.getElementById('st-other-kisu').innerHTML = '<div class="st-cohort-empty">아직 기수 데이터가 없어요 🐾</div>';
+  renderOtherKisu([]);
   document.getElementById('st-kisu-insight').innerHTML = '';
   document.getElementById('st-analysis-card').hidden = true;
   document.getElementById('heatmap').innerHTML = '';
