@@ -1099,7 +1099,7 @@ function renderResultScreen(t, doSubmit) {
   document.getElementById('res-compat-line').innerHTML =
     `<strong>${t.compatIcon} ${compatName}</strong>${compatDesc ? ' — ' + compatDesc : ''}`;
   document.getElementById('share-text').textContent =
-    `⚡ **코드잇 스프린터 유형 테스트 결과** ⚡\n${courseFull} ${userKisu}기 **${userName}**\n\n나는 ${t.emoji} **${t.name}**!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} **${compatName}**${compatDesc ? '\n→ ' + compatDesc : ''}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 또는 커뮤니티 서버 #💬소통_할까요 채널을 활용해봐요!`;
+    `⚡ **코드잇 스프린터 유형 테스트 결과** ⚡\n${courseFull} ${userKisu}기 **${userName}**\n\n나는 ${t.emoji} **${t.name}**!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} **${compatName}**${compatDesc ? '\n→ ' + compatDesc : ''}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 또는 커뮤니티 서버 #💬소통_할까요 채널을 활용해봐요!\n#코드잇스프린트 #스프린터유형테스트`;
   const statusEl = document.getElementById('sub-status');
   if (!doSubmit) {
     statusEl.className = 'sub-status show ok';
@@ -1195,7 +1195,7 @@ function renderFirstSprinterOnly() {
     <div style="font-size:13px;font-weight:700;color:var(--fg);margin-bottom:6px">우리 기수 첫 번째 스프린터예요!</div>
     <div style="font-size:11px;color:var(--fg-sub);line-height:1.85">동기들이 참여하면<br>여기서 유형 분포를 확인할 수 있어요.<br>잠시 후 다시 확인해보세요 🙂</div>
   </div>`;
-  renderOtherKisu([]);
+  document.getElementById('st-other-kisu').innerHTML = '<div class="st-cohort-empty">아직 기수 데이터가 없어요 🐾</div>';
   document.getElementById('st-kisu-insight').innerHTML = '';
   document.getElementById('st-analysis-card').hidden = true;
   document.getElementById('heatmap').innerHTML = '';
@@ -1278,11 +1278,11 @@ function renderMyKisuBars(cohorts, totalPct) {
 /* 다른 기수 비교 (completed 오른쪽 패널) */
 function renderOtherKisu(cohorts) {
   const el = document.getElementById('st-other-kisu');
-  const range = COURSE_KISU_RANGE[userCourse];
-  if (!cohorts.length && !range) {
+  if (!cohorts.length) {
     el.innerHTML = '<div class="st-cohort-empty">기수 데이터가 없어요</div>';
     return;
   }
+  const range = COURSE_KISU_RANGE[userCourse];
   let slots = cohorts.slice().sort((a,b) => Number(b.kisu)-Number(a.kisu));
   if (range) {
     const [minK, maxK] = range;
