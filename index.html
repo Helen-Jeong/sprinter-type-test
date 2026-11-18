@@ -612,7 +612,7 @@
       <div class="res-dark-content"><p class="res-compat-line" id="res-compat-line"></p></div>
     </div>
     <div id="sub-status" class="sub-status"></div>
-    <p class="share-notice">👇 결과를 복사해서 공유해봐요!<br>기수 서버 <span class="notag">#💬소통-할까요</span> 또는 커뮤니티 서버 <span class="notag">#💬소통_할까요</span></p>
+    <p class="share-notice">👇 결과를 복사해서 공유해봐요!<br>기수 서버 <span class="notag">#💬소통-할까요</span> 또는 커뮤니티 서버 <span class="notag">#💬소통_할까요</span> 채널을 활용해봐요!</p>
     <div class="share-box">
       <p class="sec-label">// 📤 SHARE</p>
       <div class="share-text" id="share-text"></div>
@@ -1099,7 +1099,7 @@ function renderResultScreen(t, doSubmit) {
   document.getElementById('res-compat-line').innerHTML =
     `<strong>${t.compatIcon} ${compatName}</strong>${compatDesc ? ' — ' + compatDesc : ''}`;
   document.getElementById('share-text').textContent =
-    `⚡ **코드잇 스프린터 유형 테스트 결과** ⚡\n${courseFull} ${userKisu}기 **${userName}**\n\n나는 ${t.emoji} **${t.name}**!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} **${compatName}**${compatDesc ? '\n→ ' + compatDesc : ''}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 / 커뮤니티 서버 #💬소통_할까요`;
+    `⚡ **코드잇 스프린터 유형 테스트 결과** ⚡\n${courseFull} ${userKisu}기 **${userName}**\n\n나는 ${t.emoji} **${t.name}**!\n${t.shortDesc} 유형이에요.\n\n잘 맞는 유형: ${t.compatIcon} **${compatName}**${compatDesc ? '\n→ ' + compatDesc : ''}\n\n👉🏻 나도 테스트하기: ${location.origin}${location.pathname}\n\n📢 기수 서버 #💬소통-할까요 / 커뮤니티 서버 #💬소통_할까요 채널을 통해 공유해 주세요 🙌🏻`;
   const statusEl = document.getElementById('sub-status');
   if (!doSubmit) {
     statusEl.className = 'sub-status show ok';
