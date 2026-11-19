@@ -1,9 +1,7 @@
 <title>코드잇 스프린터 유형 테스트</title>
 <meta property="og:title" content="나는 어떤 스프린터일까? 🐆🦉🐬🦦🐹">
 <meta property="og:description" content="과정도 기수도 달라도, 우리는 모두 스프린터. 10개 질문으로 내 유형을 확인해보세요!">
-<meta property="og:image" content="https://helen-jeong.github.io/sprinter-type-test/og-image.png">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡️</text></svg>">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;700&display=swap">
 <style>
@@ -276,10 +274,10 @@
   }
   .res-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin-bottom: 10px; }
   .res-card-dark { background: var(--surface2); padding: 0; overflow: hidden; }
-  .sec-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--fg-sub); letter-spacing: .9px; text-transform: uppercase; margin-bottom: 8px; }
+  .sec-label { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--fg-sub); letter-spacing: .9px; text-transform: uppercase; margin-bottom: 8px; }
   .res-desc { font-size: 14px; line-height: 1.85; color: var(--fg); }
   .res-desc strong { color: var(--fg); font-weight: 700; }
-  .res-dark-header { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--fg-sub); padding: 18px 22px 0; }
+  .res-dark-header { font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 1px; color: var(--fg-sub); padding: 18px 22px 0; }
   .res-dark-content { padding: 14px 22px 22px; display: flex; flex-direction: column; gap: 16px; }
   .res-tags { line-height: 2.1; margin-top: 14px; text-align: center; }
   .tag-hash { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--accent); display: inline-block; margin: 2px 7px; }
@@ -419,6 +417,7 @@
   .atmos-tag { font-size:13px; font-weight:700; color:var(--accent); }
   /* Heatmap */
   .hm-scroll { overflow-x:auto; }
+  .hm-guide { font-size:11px; color:var(--fg-sub); margin-bottom:10px; display:flex; align-items:center; gap:4px; }
   .hm-grid { display:grid; grid-template-columns:auto repeat(5,1fr); gap:3px; min-width:300px; }
   .hm-head { font-size:12px; display:flex; flex-direction:column; align-items:center; gap:3px; padding:4px 2px; }
   .hm-head-name { font-size:9px; color:var(--fg-sub); text-align:center; line-height:1.3; }
@@ -428,7 +427,7 @@
   .nc-duo { display:grid; grid-template-columns:1fr 1px 1fr; overflow:hidden; }
   .nc-duo-divider { background:var(--border); }
   .nc-duo-cell { padding:22px 16px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:7px; }
-  .nc-duo-label { font-family:'IBM Plex Mono',monospace; font-size:9px; font-weight:700; letter-spacing:2px; color:var(--fg-sub); }
+  .nc-duo-label { font-family:'IBM Plex Sans KR',system-ui,sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; color:var(--fg-sub); }
   .nc-duo-emoji { font-size:44px; line-height:1; }
   .nc-duo-name { font-size:11px; font-weight:700; color:var(--fg); line-height:1.4; }
   .nc-duo-stat { font-family:'Do Hyeon',sans-serif; font-size:28px; line-height:1; }
@@ -684,6 +683,7 @@
         <!-- 전체 과정별 유형 분포 히트맵 -->
         <div class="st-card">
           <div class="st-sec-title"><span class="sec-emoji">🗺️</span>전체 과정별 유형 분포</div>
+          <div class="hm-guide">각 셀의 색이 진할수록 해당 유형의 비율이 높아요. 테두리가 있는 셀은 그 과정에서 가장 많은 유형이에요.</div>
           <div class="hm-scroll"><div class="hm-grid" id="heatmap"></div></div>
         </div>
 
@@ -697,16 +697,21 @@
 
         <!-- 전체 스프린터 분포 -->
         <div class="st-card">
-          <div class="st-sec-title" style="font-size:14px;margin-bottom:16px;"><span class="sec-emoji">📊</span>전체 스프린터 분포</div>
+          <div class="st-sec-title"><span class="sec-emoji">📊</span>전체 스프린터 분포</div>
           <div style="display:flex;justify-content:center;margin-bottom:18px;">
             <svg id="donut-nc-svg" width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0;"></svg>
           </div>
           <div id="nc-type-rows"></div>
+          <div style="margin-top:18px;padding:14px 16px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:12px;text-align:center;">
+            <div style="font-size:13px;font-weight:700;color:var(--fg);margin-bottom:5px">✨ 테스트하면 더 자세한 분석을 볼 수 있어요!</div>
+            <div style="font-size:12px;color:var(--fg-sub);line-height:1.7">내 기수 유형 분포, 기수 간 비교, 과정 분위기 예측까지<br>테스트 완료 후 확인할 수 있어요.</div>
+          </div>
         </div>
 
         <!-- 전체 과정별 유형 분포 (히트맵) -->
         <div class="st-card">
-          <div class="st-sec-title" style="font-size:14px;margin-bottom:16px;"><span class="sec-emoji">🗺️</span>전체 과정별 유형 분포</div>
+          <div class="st-sec-title"><span class="sec-emoji">🗺️</span>전체 과정별 유형 분포</div>
+          <div class="hm-guide">각 셀의 색이 진할수록 해당 유형의 비율이 높아요. 테두리가 있는 셀은 그 과정에서 가장 많은 유형이에요.</div>
           <div class="hm-scroll"><div class="hm-grid" id="heatmap-nc"></div></div>
         </div>
 
@@ -726,8 +731,8 @@
       <p class="modal-type" id="modal-type"></p>
       <p class="modal-sub">이전 결과를 바로 볼까요?<br>아니면 다시 테스트해볼래요?</p>
       <div class="modal-actions">
-        <button class="btn-modal-ghost" onclick="closeModalRetry()">다시 테스트하기</button>
         <button class="btn-modal-primary" onclick="closeModalGoResult()">이전 결과 보기</button>
+        <button class="btn-modal-ghost" onclick="closeModalRetry()">다시 테스트하기</button>
       </div>
     </div>
   </div>
@@ -1203,7 +1208,8 @@ function renderFirstSprinterOnly() {
 
 function retryStats() { statsLoaded = false; loadStats(); }
 
-const TYPE_RGB = ['155,143,214','232,168,56','80,191,160','224,112,112','107,170,223'];
+const TYPE_RGB    = ['155,143,214','232,168,56','80,191,160','224,112,112','107,170,223'];
+const TYPE_BORDER = ['#844C9B','#C58F30','#42AEA7','#BE5C63','#5295CB'];
 const COURSE_NAMES_SHORT = {
   FS:'FS', DA:'DA', SB:'SB', AI:'AI', PD:'PD', IF:'IF'
 };
@@ -1350,6 +1356,20 @@ function renderAnalysis(cohorts, totalPct) {
   const label = myCohort ? (COURSE_NAMES[userCourse] || userCourse) + ' ' + userKisu + '기' : '전체 스프린터';
   if (titleEl) titleEl.textContent = label + ' 기수 분석';
 
+  // 나 혼자일 때 — 분석 불가 메시지
+  if (myCohort && count === 1) {
+    card.hidden = false;
+    comboEl.innerHTML = `<div style="text-align:center;padding:20px 8px 12px">
+      <div style="font-size:36px;margin-bottom:12px">🌱</div>
+      <div style="font-size:14px;font-weight:700;color:var(--fg);margin-bottom:8px">아직 기수에 나 혼자예요!</div>
+      <div style="font-size:12px;color:var(--fg-sub);line-height:1.9">동기들이 참여하면 기수 분석을 확인할 수 있어요.<br>잠시 후 다시 확인해보세요 🙂</div>
+    </div>`;
+    pillsEl.innerHTML = '';
+    const atmosEl = document.getElementById('st-atmosphere');
+    if (atmosEl) atmosEl.innerHTML = '';
+    return;
+  }
+
   const sorted = pct.map((p,i) => ({p,i})).sort((a,b) => b.p-a.p);
   const hasSecond = sorted.length > 1 && sorted[1].p >= 1;
   const top1 = TYPES[sorted[0].i], top2 = hasSecond ? TYPES[sorted[1].i] : null;
@@ -1407,7 +1427,7 @@ function renderAnalysis(cohorts, totalPct) {
       pills.push(`<div class="s-pill">▸ ${rT.emoji} ${euneun(rT.name)} <strong>단 ${rC}명</strong>의 무드메이커</div>`);
     }
   }
-  if (combined > 0) {
+  if (combined > 0 && hasSecond) {
     pills.push(`<div class="s-pill">▸ ${top1.name} + ${igga(top2.name)} <strong>${combined}%</strong> 차지</div>`);
   }
   pillsEl.innerHTML = pills.join('');
@@ -1533,7 +1553,7 @@ function renderHeatmap(elId, courses) {
       const base = Math.min(0.85, 0.05+(p/50)*0.85);
       const alpha = isTop ? Math.min(1, base+0.3) : base;
       const textColor = p > 20 || isTop ? '#fff' : TYPES[i].color;
-      const shadow = isTop ? `;box-shadow:inset 0 0 0 2px ${TYPES[i].color}` : '';
+      const shadow = isTop ? `;box-shadow:inset 0 0 0 2px ${TYPE_BORDER[i]}` : '';
       return `<div class="hm-cell${isTop?' top':''}" style="background:rgba(${TYPE_RGB[i]},${alpha.toFixed(2)});color:${textColor}${shadow}">${p}%</div>`;
     }).join('');
   });
